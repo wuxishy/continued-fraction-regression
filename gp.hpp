@@ -1,18 +1,34 @@
+/*********************
+ * FILE: gp.hpp         
+ * AUTHOR: Haoyuan Sun
+ * DATE: July, 2018
+ *********************/
+
 #ifndef __GP_HPP
 #define __GP_HPP
 
-#include <algorithm>
+// forward declare
+class agent;
 
+// include
+#include <algorithm>
 #include "rng.hpp"
 
-struct population {
-    population();
-    ~population();
+class population {
+private:
+    agent* leader;
 
     void initialize();
     void initialize(int len);
 
     void breed();
+
+    bool stop_condition();
+    
+public:
+    population();
+    ~population();
+
 
     void run(int gen);
 };

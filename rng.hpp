@@ -1,3 +1,12 @@
+/**********************
+ * FILE: rng.hpp
+ * AUTHOR: Haoyuan Sun
+ * Date: April, 2018
+ **********************/
+
+// wrapper around STL's built-in pseudorandom number
+// generator functionalities
+
 #ifndef __RNG_HPP
 #define __RNG_HPP
 
