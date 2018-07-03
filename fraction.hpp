@@ -16,7 +16,7 @@ private:
     int num_var;
 
 public:
-    vector<func> repr;
-}
+    std::vector<func> repr;
+};
 
 #endif // __FRACTION_HPP

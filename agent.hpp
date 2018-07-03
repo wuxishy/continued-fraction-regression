@@ -12,13 +12,18 @@
 
 class agent {
 private:
+    int depth;  // the depth below this node (inclusive), leaves has depth 1
+    int degree; // the degree of the tree structure, default is 3
+
+    agent* parent;
+    agent** children;
 
 public:
     fraction pocket;
     fraction current;
 
-    agent();
+    agent(int dep, int deg = 3);
     ~agent();
-}
+};
 
 #endif // __AGENT_HPP

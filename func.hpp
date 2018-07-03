@@ -12,6 +12,6 @@ private:
 
 public:
 
-}
+};
 
 #endif //__FUNC_HPP
