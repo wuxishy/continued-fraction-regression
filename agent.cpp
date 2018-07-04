@@ -28,3 +28,28 @@ agent::~agent() {
         delete[] children;
     }
 }
+
+void agent::swap(agent* a, int i, agent* b, int j) {
+    double tmp_fit = a->fitness[i];
+    a->fitness[i] = b->fitness[j];
+    b->fitness[j]  = tmp_fit;
+
+    fraction tmp_frac = a->member[i];
+    a->member[i] = b->member[j];
+    b->member[j] = tmp_frac;
+}
+
+void agent::update_pocket() {
+    if(fitness[0] > fitness[1]) 
+        agent::swap(this, 0, this, 1);
+}
+
+void agent::propagate_pocket() {
+    // already the leader
+    if (!this->parent) return;
+
+    if(fitness[0] > this->parent->fitness[0]) {
+        agent::swap(this, 0, this->parent, 0);
+        return this->parent->propagate_pocket();
+    }
+}

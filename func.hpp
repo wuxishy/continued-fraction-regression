@@ -9,14 +9,13 @@
 
 #include <vector>
 
-template <typename T=double>
 class func {
 private:
     int num_var;
-    std::vector<T> coeff;
+    std::vector<double> coeff;
 
 public:
-    func(int n);
+    func(int n = 1);
 
     double eval(std::vector<double>& vars);
 

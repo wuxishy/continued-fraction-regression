@@ -18,12 +18,20 @@ private:
     agent* parent;
     agent** children;
 
-public:
-    fraction pocket;
-    fraction current;
+    // 0 is pocket, 1 is current
+    fraction member[2];
+    double fitness[2];
 
+    static void swap(agent* a, int i, agent* b, int j);
+
+    void update_pocket();
+    void propagate_pocket();
+
+public:
     agent(int dep, int deg = 3);
     ~agent();
+
+    void update();
 };
 
 #endif // __AGENT_HPP
