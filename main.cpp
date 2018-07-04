@@ -1,8 +1,8 @@
-#include "agent.hpp"
+#include "gp.hpp"
 
 int main(int argv, char** argc) {
-    agent* smith = new agent(3);
+    population ant;
 
-    delete smith;
+    ant.run(100);
     return 0;
 }

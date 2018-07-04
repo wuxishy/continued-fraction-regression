@@ -16,6 +16,8 @@ private:
     int num_var;
 
 public:
+    fraction(int n=1) : num_var(n) {};
+
     std::vector<func> repr;
 };
 

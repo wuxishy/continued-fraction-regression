@@ -18,8 +18,7 @@ class population {
 private:
     agent* leader;
 
-    void initialize();
-    void initialize(int len);
+    static void initialize(agent* current);
 
     void breed();
 

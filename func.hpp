@@ -9,9 +9,14 @@
 
 class func {
 private:
+    int num_var;
+    double* coeff;
 
 public:
+    func(int n);
+    ~func();
 
+    friend class fraction;
 };
 
 #endif //__FUNC_HPP
