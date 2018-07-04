@@ -6,10 +6,17 @@
 
 #include "func.hpp"
 
-func::func(int n) : num_var(n) {
-   coeff = new double[num_var]; 
+template <typename T>
+func<T>::func(int n) : num_var(n) {
+   coeff = std::vector<T> (n); 
 }
 
-func::~func() {
-    delete[] coeff;
+template<typename T>
+double func<T>::eval(std::vector<double>& vars) {
+    double ret = 0;
+    for(int i = 0; i < num_var; ++i) {
+        ret += vars[i] * coeff[i];
+    }
+
+    return ret;
 }

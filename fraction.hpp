@@ -18,7 +18,11 @@ private:
 public:
     fraction(int n=1) : num_var(n) {};
 
-    std::vector<func> repr;
+    double eval(std::vector<double>& vars);
+    // evaluate to nth level
+    double eval(std::vector<double>& vars, int n);
+
+    std::vector<func<>> repr;
 };
 
 #endif // __FRACTION_HPP

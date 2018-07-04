@@ -7,14 +7,18 @@
 #ifndef __FUNC_HPP
 #define __FUNC_HPP
 
+#include <vector>
+
+template <typename T=double>
 class func {
 private:
     int num_var;
-    double* coeff;
+    std::vector<T> coeff;
 
 public:
     func(int n);
-    ~func();
+
+    double eval(std::vector<double>& vars);
 
     friend class fraction;
 };
