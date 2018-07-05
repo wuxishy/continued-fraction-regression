@@ -32,6 +32,8 @@ public:
     ~agent();
 
     void update();
+
+    friend class population;
 };
 
 #endif // __AGENT_HPP

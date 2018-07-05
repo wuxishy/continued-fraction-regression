@@ -16,11 +16,13 @@ class agent;
 
 class population {
 private:
-    agent* leader;
+    agent* root;
 
     static void initialize(agent* current);
 
-    void breed();
+    static void recombine(agent* a, agent* b);
+    static void mutate(agent* a);
+    void breed(agent* leader);
 
     bool stop_condition();
     
