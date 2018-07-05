@@ -12,6 +12,7 @@ func::func(int n) : num_var(n) {
 
 double func::eval(std::vector<double>& vars) {
     double ret = 0;
+
     for(int i = 0; i < num_var; ++i) {
         ret += vars[i] * coeff[i];
     }

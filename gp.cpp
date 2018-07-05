@@ -6,8 +6,15 @@
 
 #include "gp.hpp"
 #include "agent.hpp"
+#include <cassert>
 
-population::population() {
+population::population(std::vector<double>& e, 
+        std::vector<std::vector<double>>& d) : expected(e), data(d) {
+    num_entry = expected.size();
+    num_var = data[0].size();
+    assert(num_var > 0);
+    assert(num_entry == d.size());
+
     root = new agent(3);
 }
 

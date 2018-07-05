@@ -11,25 +11,32 @@
 class agent;
 
 // include
-#include <algorithm>
+#include <vector>
 #include "rng.hpp"
 
 class population {
 private:
+    int num_var;
+    int num_entry;
+
+    std::vector<double> expected;
+    std::vector<std::vector<double>> data;
+
     agent* root;
 
-    static void initialize(agent* current);
+    void initialize(agent* current);
 
-    static void recombine(agent* a, agent* b);
-    static void mutate(agent* a);
+    void eval_fit(agent* a);
+
+    void recombine(agent* a, agent* b);
+    void mutate(agent* a);
     void breed(agent* leader);
 
     bool stop_condition();
     
 public:
-    population();
+    population(std::vector<double>& e, std::vector<std::vector<double>>& d);
     ~population();
-
 
     void run(int gen);
 };

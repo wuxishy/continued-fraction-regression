@@ -6,7 +6,9 @@
 
 #include "fraction.hpp"
 
-fraction::fraction(int n) : num_var(n) {}
+fraction::fraction(int n) : num_var(n) {
+    repr = std::vector<func>(1);
+}
 
 double fraction::eval(std::vector<double>& vars) {
     return eval(vars, repr.size() - 1);
