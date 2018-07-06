@@ -7,24 +7,29 @@
 #include "gp.hpp"
 #include "agent.hpp"
 #include <cmath>
+#include "rng.hpp"
+void population::eval_fit(agent* a, int i) {
+    a->fitness[i] = 0;
 
-void population::eval_fit(agent* a) {
-    a->fitness[1] = 0;
-
-    for(int i = 0; i < num_entry; ++i) {
-        a->fitness[1] += abs(expected[i] - a->member[0].eval(data[i]));
+    for(std::size_t j = 0; j < num_entry; ++j) {
+        a->fitness[i] += abs(expected[j] - a->member[i].eval(data[j]));
     } 
 }
 
 void population::recombine(agent* a, agent* b) {
-    eval_fit(a);
+    // just random stuff for now
+    a->member[1] = a->member[0];
+    int n = randint(0, 1)();
+    a->member[1].repr[n] = b->member[1].repr[n];
+    
+    eval_fit(a, 1);
 
     a->update_pocket();
     a->propagate_pocket();
 }
 
 void population::mutate(agent* a) {
-    eval_fit(a);
+    eval_fit(a, 1);
 
     a->update_pocket();
     a->propagate_pocket();

@@ -11,15 +11,16 @@
 
 class func {
 private:
-    int num_var;
+    std::size_t num_var;
     std::vector<double> coeff;
 
 public:
-    func(int n = 1);
+    func(std::size_t n = 1);
 
     double eval(std::vector<double>& vars);
 
     friend class fraction;
+    friend class population;
 };
 
 #endif //__FUNC_HPP

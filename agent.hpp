@@ -13,7 +13,7 @@
 class agent {
 private:
     int depth;  // the depth below this node (inclusive), leaves has depth 1
-    int degree; // the degree of the tree structure, default is 3
+    std::size_t degree; // the degree of the tree structure, default is 3
 
     agent* parent;
     agent** children;
@@ -25,10 +25,11 @@ private:
     static void swap(agent* a, int i, agent* b, int j);
 
     void update_pocket();
+    void movedown_pocket();
     void propagate_pocket();
 
 public:
-    agent(int dep, int deg = 3);
+    agent(std::size_t dep, std::size_t deg = 3);
     ~agent();
 
     void update();

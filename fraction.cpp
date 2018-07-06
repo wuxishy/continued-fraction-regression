@@ -6,15 +6,15 @@
 
 #include "fraction.hpp"
 
-fraction::fraction(int n) : num_var(n) {
-    repr = std::vector<func>(1);
+fraction::fraction(std::size_t n) : num_var(n) {
+    repr = std::vector<func>(2);
 }
 
 double fraction::eval(std::vector<double>& vars) {
     return eval(vars, repr.size() - 1);
 }
 
-double fraction::eval(std::vector<double>& vars, int n) {
+double fraction::eval(std::vector<double>& vars, std::size_t n) {
     if (n >= repr.size()) 
         n = repr.size() - 1;
 

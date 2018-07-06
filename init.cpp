@@ -7,6 +7,14 @@
 #include "gp.hpp"
 #include "agent.hpp"
 
-void population::initialize(agent* current) {
-    return;
+void population::initialize(agent *current) {
+    eval_fit(current, 0);
+    eval_fit(current, 1);
+
+    if (current->depth > 1) {
+        for(std::size_t i = 0; i < current->degree; ++i) 
+            initialize(current->children[i]);
+    }
+
+    current->movedown_pocket();
 }

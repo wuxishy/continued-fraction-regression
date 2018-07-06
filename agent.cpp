@@ -6,13 +6,13 @@
 
 #include "agent.hpp"
 
-agent::agent(int dep, int deg) : depth(dep), degree(deg) {
+agent::agent(std::size_t dep, std::size_t deg) : depth(dep), degree(deg) {
     this->parent = nullptr;
 
     if (depth > 1) {
         children = new agent*[degree];
 
-        for(int i = 0; i < degree; ++i) {
+        for(std::size_t i = 0; i < degree; ++i) {
             children[i] = new agent(depth-1, degree);
             children[i]->parent = this;
         }
@@ -24,7 +24,7 @@ agent::agent(int dep, int deg) : depth(dep), degree(deg) {
 
 agent::~agent() {
     if (depth > 1) {
-        for(int i = 0; i < degree; ++i) delete children[i];
+        for(std::size_t i = 0; i < degree; ++i) delete children[i];
         delete[] children;
     }
 }
@@ -44,11 +44,32 @@ void agent::update_pocket() {
         agent::swap(this, 0, this, 1);
 }
 
+void agent::movedown_pocket() {
+    update_pocket();
+
+    // already a leaf
+    if (depth <= 1) return;
+
+    int best_child = 0;
+    double best_fit = this->children[0]->fitness[0];
+    for(std::size_t i = 1; i < degree; ++i) {
+        if (children[i]->fitness[0] < best_fit) {
+            best_child = i;
+            best_fit = children[i]->fitness[0];
+        }
+    }
+
+    if (fitness[0] > best_fit) {
+        swap(this, 0, children[best_child], 0);
+        children[best_child]->movedown_pocket();
+    }
+}
+
 void agent::propagate_pocket() {
     // already the leader
     if (!this->parent) return;
 
-    if(fitness[0] > this->parent->fitness[0]) {
+    if(fitness[0] < this->parent->fitness[0]) {
         agent::swap(this, 0, this->parent, 0);
         return this->parent->propagate_pocket();
     }

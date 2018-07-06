@@ -13,14 +13,14 @@
 
 class fraction {
 private:
-    int num_var;
+    std::size_t num_var;
 
 public:
-    fraction(int n=1);
+    fraction(std::size_t n=1);
 
     double eval(std::vector<double>& vars);
     // evaluate to nth level
-    double eval(std::vector<double>& vars, int n);
+    double eval(std::vector<double>& vars, std::size_t n);
 
     std::vector<func> repr;
 };

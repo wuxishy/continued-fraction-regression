@@ -16,8 +16,8 @@ class agent;
 
 class population {
 private:
-    int num_var;
-    int num_entry;
+    std::size_t num_var;
+    std::size_t num_entry;
 
     std::vector<double> expected;
     std::vector<std::vector<double>> data;
@@ -26,14 +26,17 @@ private:
 
     void initialize(agent* current);
 
-    void eval_fit(agent* a);
+    void eval_fit(agent* a, int i);
 
     void recombine(agent* a, agent* b);
     void mutate(agent* a);
     void breed(agent* leader);
 
     bool stop_condition();
-    
+
+    // debug stuff
+    bool check(agent* a);
+    void print();
 public:
     population(std::vector<double>& e, std::vector<std::vector<double>>& d);
     ~population();

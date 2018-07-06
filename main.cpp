@@ -11,6 +11,6 @@ int main(int argv, char** argc) {
 
     population ant(expected, data);
 
-    ant.run(100);
+    ant.run(5);
     return 0;
 }
