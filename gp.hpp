@@ -24,6 +24,8 @@ private:
 
     agent* root;
 
+    randint rint;
+
     void initialize(agent* current);
 
     void eval_fit(agent* a, int i);
@@ -37,6 +39,7 @@ private:
     // debug stuff
     bool check(agent* a);
     void print();
+
 public:
     population(std::vector<double>& e, std::vector<std::vector<double>>& d);
     ~population();

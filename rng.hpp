@@ -12,25 +12,27 @@
 
 #include <random>
 
-struct randint {
+class randint {
+private:
     std::mt19937 gen;
-    std::uniform_int_distribution<> dis;
 
-    randint (int a, int b) {
+public:
+    randint () {
         std::random_device rd;
         gen.seed(rd());
-        dis = std::uniform_int_distribution<> (a, b);
     }
 
-    int operator() () {
-        return dis(gen);
+    int operator() (int a, int b) {
+        return std::uniform_int_distribution<> (a, b) (gen);
     }
 };
 
-struct randreal {
+class randreal {
+private:
     std::mt19937 gen;
     std::uniform_real_distribution<> dis;
 
+public:
     randreal() {
         std::random_device rd;
         gen.seed(rd());

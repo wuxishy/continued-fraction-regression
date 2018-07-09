@@ -18,6 +18,8 @@ population::population(std::vector<double>& e,
 
     root = new agent(3, 2);
 
+    rint = randint();
+
     initialize(root);
 }
 

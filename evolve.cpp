@@ -6,8 +6,10 @@
 
 #include "gp.hpp"
 #include "agent.hpp"
+
 #include <cmath>
 #include "rng.hpp"
+
 void population::eval_fit(agent* a, int i) {
     a->fitness[i] = 0;
 
@@ -19,7 +21,7 @@ void population::eval_fit(agent* a, int i) {
 void population::recombine(agent* a, agent* b) {
     // just random stuff for now
     a->member[1] = a->member[0];
-    int n = randint(0, 1)();
+    int n = rint(0, 1);
     a->member[1].repr[n] = b->member[1].repr[n];
     
     eval_fit(a, 1);

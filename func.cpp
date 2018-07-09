@@ -10,8 +10,8 @@ func::func(std::size_t n) : num_var(n) {
     coeff = std::vector<double> (n);
 
     // just random stuff for now
-    randint r(0, 9);
-    coeff[0] = r();
+    randint r;
+    coeff[0] = r(0, 9);
 }
 
 double func::eval(std::vector<double>& vars) {
