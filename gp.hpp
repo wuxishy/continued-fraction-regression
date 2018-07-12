@@ -26,14 +26,19 @@ private:
 
     randint rint;
 
+    // init.cpp
     void initialize(agent* current);
 
+    // evolve.cpp
     void eval_fit(agent* a, int i);
-
     void recombine(agent* a, agent* b);
     void mutate(agent* a);
-    void breed(agent* leader);
 
+    // recomb_op.cpp
+    void variable_intersect(agent* a, agent* b);
+
+    // gp.cpp
+    void breed(agent* leader);
     bool stop_condition();
 
     // debug stuff

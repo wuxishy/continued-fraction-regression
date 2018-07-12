@@ -1,6 +1,8 @@
 #include "reader.hpp"
 #include "gp.hpp"
 
+#include "optimize.hpp"
+
 #include <cstdio>
 
 int main(int argv, char** argc) {

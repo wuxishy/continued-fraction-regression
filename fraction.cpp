@@ -6,8 +6,10 @@
 
 #include "fraction.hpp"
 
+#include <cmath>
+
 fraction::fraction(std::size_t n) : num_var(n) {
-    repr = std::vector<func>(2);
+    repr = std::vector<func>(1);
 }
 
 double fraction::eval(std::vector<double>& vars) {
@@ -23,4 +25,16 @@ double fraction::eval(std::vector<double>& vars, std::size_t n) {
         ret = repr[i].eval(vars) / (1 + ret);
 
     return ret + repr[0].eval(vars);
+}
+
+double fraction::eval_fit(std::size_t num_entry, 
+        std::vector<double>& expected, 
+        std::vector<std::vector<double>>& data) {
+	double ret = 0;
+	
+	for(std::size_t i = 0; i < num_entry; ++i) {
+        ret += std::abs(expected[i] - this->eval(data[i]));
+    }
+    
+    return ret;
 }

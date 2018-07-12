@@ -21,6 +21,10 @@ public:
     double eval(std::vector<double>& vars);
     // evaluate to nth level
     double eval(std::vector<double>& vars, std::size_t n);
+    
+    double eval_fit(std::size_t num_entry,
+    	std::vector<double>& expected, 
+        std::vector<std::vector<double>>& data);
 
     std::vector<func> repr;
 };

@@ -9,6 +9,7 @@
 #include <cassert>
 #include <cstdio>
 #include <deque>
+#include "optimize.hpp"
 population::population(std::vector<double>& e, 
         std::vector<std::vector<double>>& d) : expected(e), data(d) {
     num_entry = expected.size();
@@ -56,11 +57,23 @@ bool population::stop_condition() {
 
 // run the simulation at most n iterations
 void population::run(int n) {
+	/*
     for(int i = 0; i < n; ++i) {
         if (stop_condition()) break;
 
         breed(root);
     }
+    */
+    optimize opt(num_entry, expected, data);
+    opt.set_dim(1, {true});
+    
+    fraction frac;
+    vector<double>& t = frac.repr[0].coeff;
+    //for(double i = 0; i < 3; i+=0.1) {
+    //    t[0] = i;
+    //    printf("%f %f\n", i, frac.eval_fit(num_entry, expected, data));
+    //}
+    opt.run(1, frac, t);
 }
 
 bool population::check(agent* a) {

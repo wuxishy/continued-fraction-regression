@@ -11,18 +11,10 @@
 #include "rng.hpp"
 
 void population::eval_fit(agent* a, int i) {
-    a->fitness[i] = 0;
-
-    for(std::size_t j = 0; j < num_entry; ++j) {
-        a->fitness[i] += abs(expected[j] - a->member[i].eval(data[j]));
-    } 
+    a->fitness[i] = a->member[i].eval_fit(num_entry, expected, data);
 }
 
 void population::recombine(agent* a, agent* b) {
-    // just random stuff for now
-    a->member[1] = a->member[0];
-    int n = rint(0, 1);
-    a->member[1].repr[n] = b->member[1].repr[n];
     
     eval_fit(a, 1);
 
