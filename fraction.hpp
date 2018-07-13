@@ -26,6 +26,7 @@ public:
     	std::vector<double>& expected, 
         std::vector<std::vector<double>>& data);
 
+    double constant;
     std::vector<func> repr;
 };
 

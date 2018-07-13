@@ -68,15 +68,17 @@ void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {
     
     coord cent = tmp;
     for(int i = 0; i < ndim; ++i)
-        cent[i] += 1.0/(ndim + 1);
+        cent[i] += 2.0/(ndim + 1);
 
     for(int i = 0; i <= ndim; ++i) {
         simplex.insert({eval_fit(frac, coeff, tmp), tmp});
-        if(i > 0) tmp[i-1] -= 1;
-        if(i < ndim) tmp[i] += 1;
+        if(i > 0) tmp[i-1] -= 2;
+        if(i < ndim) tmp[i] += 2;
     }
 
-    for(int i = 0; i < 100; ++i) {
+    int num = 0;
+    while (simplex.begin()->first - (--simplex.end())->first > 1
+           && num < 200) {
         auto vw = simplex.begin();
         coord vtmp = sub(cent, vw->second);
         coord vnew;
@@ -89,8 +91,11 @@ void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {
         }
         else vnew = sub(cent, mul(0.625, tmp));
 
+        cent = add(cent, mul(1.0/(ndim+1), sub(vnew, vw->second)));
         simplex.erase(vw);
         simplex.insert({eval_fit(frac, coeff, vnew), vnew});
+
+        ++num;
     }
 
     eval_fit(frac, coeff, (--simplex.end())->second);

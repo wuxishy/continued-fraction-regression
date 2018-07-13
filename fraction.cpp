@@ -21,10 +21,10 @@ double fraction::eval(std::vector<double>& vars, std::size_t n) {
         n = repr.size() - 1;
 
     double ret = 0;
-    for(int i = n; i >= 1; --i)
+    for(int i = n; i >= 0; --i)
         ret = repr[i].eval(vars) / (1 + ret);
 
-    return ret + repr[0].eval(vars);
+    return constant + ret;
 }
 
 double fraction::eval_fit(std::size_t num_entry, 
