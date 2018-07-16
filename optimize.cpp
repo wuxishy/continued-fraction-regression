@@ -8,8 +8,7 @@
 #include "optimize.hpp"
 #include "fraction.hpp"
 
-optimize::optimize(int n, vector<double>& e, vector<vector<double>>& d) :
-    num_entry(n), expected(e), data(d) {}
+optimize::optimize(data_store& td) : test_data(td) {}
 
 void optimize::set_dim (int n, const vector<bool>& v) {
     ndim = n;
@@ -34,7 +33,8 @@ double optimize::eval_fit(fraction& frac, vector<double>& coeff,
         else coeff[i] = 0;
     }
 
-    return frac.eval_fit(num_entry, expected, data);
+    return frac.eval_fit(test_data.num_entry, test_data.expected, 
+            test_data.input);
 }
 
 void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {

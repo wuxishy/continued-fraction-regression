@@ -10,13 +10,7 @@
 #include <cstdio>
 #include <deque>
 #include "optimize.hpp"
-population::population(std::vector<double>& e, 
-        std::vector<std::vector<double>>& d) : expected(e), data(d) {
-    num_entry = expected.size();
-    num_var = data[0].size();
-    assert(num_var > 0);
-    assert(num_entry == d.size());
-
+population::population(data_store td) : test_data(td) {
     root = new agent(3, 2);
 
     rint = randint();
@@ -64,7 +58,7 @@ void population::run(int n) {
         breed(root);
     }
     */
-    optimize opt(num_entry, expected, data);
+    optimize opt(test_data);
     opt.set_dim(1, {true});
     
     fraction frac;

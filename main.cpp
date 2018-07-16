@@ -1,4 +1,5 @@
-#include "reader.hpp"
+#include "data.hpp"
+
 #include "gp.hpp"
 
 #include "optimize.hpp"
@@ -6,12 +7,11 @@
 #include <cstdio>
 
 int main(int argv, char** argc) {
-    std::vector<double> expected;
-    std::vector<std::vector<double>> data;
+    data_store test_data;
 
-    reader("data.in", expected, data);
+    test_data.read("data.in");
 
-    population ant(expected, data);
+    population ant(test_data);
 
     ant.run(5);
 

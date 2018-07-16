@@ -13,7 +13,7 @@
 #include "func.hpp"
 
 void population::variable_intersect(agent* a, agent* b) {
-    optimize opt(num_entry, expected, data);
+    optimize opt(test_data);
 
     int ind = rint(1, std::min(a->member[1].repr.size(), 
                 b->member[1].repr.size())) - 1;
@@ -25,8 +25,8 @@ void population::variable_intersect(agent* a, agent* b) {
 
     // find the shared varaiables
     int ndim = 0;
-    vector<bool> vdim(num_var, false);
-    for(size_t i = 0; i < num_var; ++i) {
+    vector<bool> vdim(test_data.num_var, false);
+    for(int i = 0; i < test_data.num_var; ++i) {
         if (std::abs(acoeff[i]) > eps && std::abs(bcoeff[i]) > eps) {
             vdim[i] = true;
             ++ndim;
@@ -38,7 +38,7 @@ void population::variable_intersect(agent* a, agent* b) {
     opt.run(1, a->member[1], acoeff);
    
     // set anything small to simply 0
-    for(size_t i = 0; i < num_var; ++i) {
+    for(int i = 0; i < test_data.num_var; ++i) {
         if (std::abs(acoeff[i]) < eps) 
             acoeff[i] = 0;
     }

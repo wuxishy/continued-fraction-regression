@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -g -Wall -Wextra -pedantic
 
-OBJ = main.o gp.o agent.o fraction.o func.o init.o \
+OBJ = main.o data.o gp.o agent.o fraction.o func.o init.o \
       evolve.o recomb_op.o optimize.o
 
 %.o : %.cpp

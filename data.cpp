@@ -1,23 +1,20 @@
 /******************************
- * FILE: reader.hpp
+ * FILE: data.cpp
  * AUTHOR: Haoyuan Sun
  * Date: July, 2018
  ******************************/
 
+#include "data.hpp"
+
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <iostream>
-
-#include <vector>
 
 #include <cassert>
 
-void reader(const char* filename, std::vector<double>& expected,
-        std::vector<std::vector<double>>& data) {
+void data_store::read(const char* filename) {
     std::ifstream fin(filename);
    
-    int num_entry, num_var;
     fin >> num_entry >> num_var;
     fin.ignore();
 
@@ -31,11 +28,11 @@ void reader(const char* filename, std::vector<double>& expected,
         tokenizer >> tmp;
         expected.push_back(tmp);
 
-        data.push_back(std::vector<double>());
+        input.push_back(vector<double>());
         
         for (int j = 0; j < num_var; ++j) {
             tokenizer >> tmp;
-            data.back().push_back(tmp);
+            input.back().push_back(tmp);
         }
 
     }

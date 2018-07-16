@@ -13,14 +13,11 @@ class agent;
 // include
 #include <vector>
 #include "rng.hpp"
+#include "data.hpp"
 
 class population {
 private:
-    std::size_t num_var;
-    std::size_t num_entry;
-
-    std::vector<double> expected;
-    std::vector<std::vector<double>> data;
+    data_store test_data;
 
     agent* root;
 
@@ -47,7 +44,7 @@ private:
     void print();
 
 public:
-    population(std::vector<double>& e, std::vector<std::vector<double>>& d);
+    population(data_store td);
     ~population();
 
     void run(int gen);

@@ -12,16 +12,15 @@ class fraction;
 class func;
 
 // include
+#include "data.hpp"
+
 #include <vector>
 using std::vector;
 using std::size_t;
 
 class optimize {
 private:
-    int num_entry;
-    vector<double>& expected;
-    vector<vector<double>>& data;
-
+    data_store& test_data;
     int ndim;
     vector<bool> vdim;
 
@@ -30,7 +29,7 @@ private:
     void nelder_mead (fraction& frac, vector<double>& coeff);
 
 public:
-    optimize(int n, vector<double>& e, vector<vector<double>>& d);
+    optimize(data_store& td);
 
     void set_dim (int n, const vector<bool>& v);
 
