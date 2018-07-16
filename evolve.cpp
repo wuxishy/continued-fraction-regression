@@ -15,7 +15,8 @@ void population::eval_fit(agent* a, int i) {
 }
 
 void population::recombine(agent* a, agent* b) {
-    
+    variable_intersect(a, b);
+
     eval_fit(a, 1);
 
     a->update_pocket();
@@ -23,6 +24,10 @@ void population::recombine(agent* a, agent* b) {
 }
 
 void population::mutate(agent* a) {
+    if (rint(1, 20) != 1) return;
+
+    leader_mutate(a);
+
     eval_fit(a, 1);
 
     a->update_pocket();

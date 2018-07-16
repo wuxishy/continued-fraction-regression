@@ -35,6 +35,7 @@ private:
     void mutate(agent* a);
 
     // recomb_op.cpp
+    void leader_mutate(agent* a);
     void variable_intersect(agent* a, agent* b);
 
     // gp.cpp
