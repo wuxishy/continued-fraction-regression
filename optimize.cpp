@@ -32,9 +32,8 @@ double optimize::eval_fit(fraction& frac, vector<double>& coeff,
         if (vdim[i]) coeff[i] = vars[k++];
         else coeff[i] = 0;
     }
-
-    return frac.eval_fit(test_data.num_entry, test_data.expected, 
-            test_data.input);
+    
+    return test_data.eval_fit(frac);
 }
 
 void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {

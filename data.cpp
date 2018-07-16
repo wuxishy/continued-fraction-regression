@@ -5,10 +5,13 @@
  ******************************/
 
 #include "data.hpp"
+#include "fraction.hpp"
 
 #include <fstream>
 #include <sstream>
 #include <string>
+
+#include <cmath>
 
 #include <cassert>
 
@@ -38,4 +41,16 @@ void data_store::read(const char* filename) {
     }
 
     fin.close();
+}
+
+double data_store::eval_fit(fraction& frac) { 
+    double ret = 0;
+
+    auto sqr = [] (double x) -> double { return x*x; };
+    
+    for(int i = 0; i < num_entry; ++i) {
+        ret += sqr(expected[i] - frac.eval(input[i]));
+    }
+    
+    return std::sqrt(ret);
 }

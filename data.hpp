@@ -7,6 +7,8 @@
 #ifndef __DATA_STORE_HPP
 #define __DATA_STORE_HPP
 
+class fraction;
+
 #include <vector>
 
 using std::vector;
@@ -19,6 +21,8 @@ struct data_store {
     vector<vector<double>> input;
 
     void read(const char* filename);
+
+    double eval_fit(fraction& frac);
 };
 
 #endif // __DATA_STORE_HPP

@@ -11,8 +11,7 @@
 #include "rng.hpp"
 
 void population::eval_fit(agent* a, int i) {
-    a->fitness[i] = a->member[i].eval_fit(test_data.num_entry, test_data.expected, 
-            test_data.input);
+    a->fitness[i] = test_data.eval_fit(a->member[i]);
 }
 
 void population::recombine(agent* a, agent* b) {
