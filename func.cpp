@@ -5,13 +5,14 @@
  **********************/
 
 #include "func.hpp"
+
 #include "rng.hpp"
+
 func::func(std::size_t n) : num_var(n) {
     coeff = std::vector<double> (n);
 
-    // just random stuff for now
-    randint r;
-    coeff[0] = r(0, 9);
+    randreal rreal;
+    for(double& x : coeff) x = 4 * (rreal() - 0.5);
 }
 
 double func::eval(std::vector<double>& vars) {

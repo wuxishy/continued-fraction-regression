@@ -6,8 +6,14 @@
 
 #include "fraction.hpp"
 
+#include "rng.hpp"
+
 fraction::fraction(std::size_t n) : num_var(n) {
-    repr = std::vector<func>(1);
+    randint rint;
+
+    repr = std::vector<func>(rint(2, 10));
+
+    for (func& x : repr) x = func(num_var);
 }
 
 double fraction::eval(std::vector<double>& vars) {

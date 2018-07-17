@@ -51,13 +51,12 @@ bool population::stop_condition() {
 
 // run the simulation at most n iterations
 void population::run(int n) {
-	/*
     for(int i = 0; i < n; ++i) {
         if (stop_condition()) break;
 
         breed(root);
     }
-    */
+    /*
     optimize opt(test_data);
     opt.set_dim(1, {true});
     
@@ -68,6 +67,7 @@ void population::run(int n) {
     //    printf("%f %f\n", i, frac.eval_fit(num_entry, expected, data));
     //}
     opt.run(1, frac, t);
+    */
 }
 
 bool population::check(agent* a) {
