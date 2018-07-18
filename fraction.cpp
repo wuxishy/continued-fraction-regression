@@ -31,3 +31,10 @@ double fraction::eval(std::vector<double>& vars, std::size_t n) {
     return constant + ret;
 }
 
+std::string fraction::show() {
+    std::string ret = "[" + std::to_string(constant);
+
+    for(func x : repr) ret += ", " + x.show();
+
+    return ret + "]";
+}

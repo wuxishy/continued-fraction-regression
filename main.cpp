@@ -13,7 +13,7 @@ int main(int argv, char** argc) {
 
     population ant(test_data);
 
-    ant.run(5);
+    ant.run(2);
 
     return 0;
 }

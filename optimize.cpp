@@ -77,7 +77,7 @@ void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {
 
     int num = 0;
     while (simplex.begin()->first - (--simplex.end())->first > 1
-           && num < 200) {
+           && num < 100) {
         auto vw = simplex.begin();
         coord vtmp = sub(cent, vw->second);
         coord vnew;

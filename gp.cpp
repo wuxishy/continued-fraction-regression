@@ -4,12 +4,18 @@
  * DATE: July, 2018
  *************************/
 
+/* the most basic functionalities of a GP program
+ * the fancy stuff are not here
+ */
+
 #include "gp.hpp"
 #include "agent.hpp"
+#include "optimize.hpp"
+
 #include <cassert>
 #include <cstdio>
 #include <deque>
-#include "optimize.hpp"
+
 population::population(data_store td) : test_data(td) {
     root = new agent(3, 2);
 
@@ -86,6 +92,10 @@ bool population::check(agent* a) {
 
 // for debug only
 void population::print() {
+    printf("%.2f %s\n", root->fitness[0], root->member[0].show().c_str());
+    printf("%.2f %s\n", root->fitness[1], root->member[1].show().c_str());
+    printf("\n");
+    /*
     std::deque<agent*> q;
     q.push_back(root);
     q.push_back(nullptr);
@@ -104,4 +114,5 @@ void population::print() {
             for(std::size_t i = 0; i < c->degree; ++i) q.push_back(c->children[i]); 
     }
     printf("\n");
+    */
 }

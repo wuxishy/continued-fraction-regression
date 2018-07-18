@@ -9,7 +9,10 @@
 
 // include
 #include <vector>
+#include <string>
+
 #include "func.hpp"
+
 
 class fraction {
 private:
@@ -24,6 +27,8 @@ public:
     
     double constant;
     std::vector<func> repr;
+
+    std::string show();
 };
 
 #endif // __FRACTION_HPP

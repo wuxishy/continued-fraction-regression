@@ -8,6 +8,9 @@
 
 #include "rng.hpp"
 
+#include <sstream>
+#include <iostream>
+
 func::func(std::size_t n) : num_var(n) {
     coeff = std::vector<double> (n);
 
@@ -23,4 +26,21 @@ double func::eval(std::vector<double>& vars) {
     }
 
     return ret;
+}
+
+std::string func::show() {
+    std::stringstream ss;
+    ss.precision(2);
+    
+    ss << coeff[0];
+    std::string ret = "(" + ss.str();
+    ss.str("");
+    
+    for(std::size_t i = 1; i < num_var; ++i) {
+        ss << coeff[i];
+        ret += ", " + ss.str();
+        ss.str("");
+    }
+
+    return ret + ")";
 }
