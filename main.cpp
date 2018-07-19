@@ -4,7 +4,8 @@
 
 #include "optimize.hpp"
 
-#include <cstdio>
+#include <string>
+#include <iostream>
 
 int main(int argv, char** argc) {
     data_store test_data;
@@ -13,7 +14,8 @@ int main(int argv, char** argc) {
 
     population ant(test_data);
 
-    ant.run(150);
+    if (argv == 1) ant.run(200);
+    else ant.run(std::stoi(argc[1]));
 
     return 0;
 }

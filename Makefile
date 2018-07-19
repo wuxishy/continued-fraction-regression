@@ -1,18 +1,21 @@
 CXX = g++
 CXXFLAGS = -g -Wall -Wextra -pedantic
 
-OBJ = main.o data.o gp.o agent.o fraction.o func.o init.o \
-      evolve.o recomb_op.o optimize.o
+LIST = main data gp agent fraction func init evolve \
+       recomb_op optimize
 
-%.o : %.cpp
-	$(CXX) -c $< $(CXXFLAGS) -o $@
-
-main: $(OBJ) 
-	$(CXX) $^ $(CXXFLAGS) -o main
+SRC = $(addsuffix .cpp, $(LIST))
+OBJ = $(addprefix bin/, $(addsuffix .o, $(LIST)))
 
 all: main
 
+bin/%.o : %.cpp
+	$(CXX) -c $< $(CXXFLAGS) -o $@
+
+main: $(OBJ) 
+	$(CXX) $^ $(CXXFLAGS) -o bin/main
+
 clean:
-	rm -f main *.o
+	rm -f bin/*
 
 .PHONY : all clean

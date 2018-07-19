@@ -34,3 +34,6 @@
 # Data files
 *.in
 *.out
+
+# binary output
+bin/*
