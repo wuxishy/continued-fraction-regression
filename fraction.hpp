@@ -9,7 +9,7 @@
 
 // include
 #include <vector>
-#include <string>
+#include <iosfwd>
 
 #include "func.hpp"
 
@@ -28,7 +28,7 @@ public:
     double constant;
     std::vector<func> repr;
 
-    std::string show();
+    void show(std::ostream& out);
 };
 
 #endif // __FRACTION_HPP

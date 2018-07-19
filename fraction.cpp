@@ -8,7 +8,11 @@
 
 #include "rng.hpp"
 
+#include <iostream>
+
 fraction::fraction(std::size_t n) : num_var(n) {
+    constant = 0;
+
     randint rint;
 
     repr = std::vector<func>(rint(2, 10));
@@ -31,10 +35,13 @@ double fraction::eval(std::vector<double>& vars, std::size_t n) {
     return constant + ret;
 }
 
-std::string fraction::show() {
-    std::string ret = "[" + std::to_string(constant);
+void fraction::show(std::ostream& out) {
+    out << "[" << constant;
 
-    for(func x : repr) ret += ", " + x.show();
+    for(func x : repr) {
+        out << ", ";
+        x.show(out);
+    }
 
-    return ret + "]";
+    out << "]";
 }

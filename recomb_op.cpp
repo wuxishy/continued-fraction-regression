@@ -13,16 +13,12 @@
 #include "func.hpp"
 
 void population::variable_intersect(agent* a, agent* b) {
-    optimize opt(test_data);
-
     int ind = rint(1, std::min(a->member[1].repr.size(), 
                 b->member[1].repr.size())) - 1;
     
     vector<double>& acoeff = a->member[1].repr[ind].coeff;
     vector<double>& bcoeff = b->member[1].repr[ind].coeff;
     
-    constexpr double eps = 0.001;
-
     // find the shared varaiables
     int ndim = 0;
     vector<bool> vdim(test_data.num_var, false);
@@ -33,6 +29,7 @@ void population::variable_intersect(agent* a, agent* b) {
         }
     }
 
+    optimize opt(test_data);
     opt.set_dim(ndim, vdim);
 
     opt.run(1, a->member[1], acoeff);
@@ -44,13 +41,71 @@ void population::variable_intersect(agent* a, agent* b) {
     }
 }
 
+void population::exchange_branch(agent* a, agent* b) {
+    int ind = rint(1, std::min(a->member[1].repr.size(), 
+                b->member[1].repr.size())) - 1;
+
+    a->member[1].repr.resize(ind);
+
+    for(size_t i = ind; i < b->member[1].repr.size(); ++i)
+        a->member[1].repr.push_back(b->member[1].repr[i]);
+    
+    // optimize at where the fractions joined
+    vector<double>& acoeff = a->member[1].repr[ind].coeff;
+    
+    // find the shared varaiables
+    int ndim = 0;
+    vector<bool> vdim(test_data.num_var, false);
+    for(int i = 0; i < test_data.num_var; ++i) {
+        if (std::abs(acoeff[i]) > eps) {
+            vdim[i] = true;
+            ++ndim;
+        }
+    }
+
+    optimize opt(test_data);
+    opt.set_dim(ndim, vdim);
+
+    opt.run(1, a->member[1], acoeff);
+   
+    // set anything small to simply 0
+    for(int i = 0; i < test_data.num_var; ++i) {
+        if (std::abs(acoeff[i]) < eps) 
+            acoeff[i] = 0;
+    }
+}
+
+// point mutation
 void population::leader_mutate(agent* a) {
     // mutate only if current is a lot worse
     // than leader
-    if (a->fitness[0] > a->fitness[1]/2)
-        return;
+    //if (a->fitness[0] > a->fitness[1]/2)
+    //    return;
 
     a->member[1] = a->member[0];
-    int n = rint(0, 1);
-    a->member[1].repr[n] = func();
+    int ind = rint(1, a->member[1].repr.size()) - 1;
+    a->member[1].repr[ind] = func();
+    
+    vector<double>& acoeff = a->member[1].repr[ind].coeff;
+    
+    // find the shared varaiables
+    int ndim = 0;
+    vector<bool> vdim(test_data.num_var, false);
+    for(int i = 0; i < test_data.num_var; ++i) {
+        if (std::abs(acoeff[i]) > eps) {
+            vdim[i] = true;
+            ++ndim;
+        }
+    }
+
+    optimize opt(test_data);
+    opt.set_dim(ndim, vdim);
+
+    opt.run(1, a->member[1], acoeff);
+   
+    // set anything small to simply 0
+    for(int i = 0; i < test_data.num_var; ++i) {
+        if (std::abs(acoeff[i]) < eps) 
+            acoeff[i] = 0;
+    }
 }

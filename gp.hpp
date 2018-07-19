@@ -31,9 +31,11 @@ private:
     void recombine(agent* a, agent* b);
     void mutate(agent* a);
 
+    const double eps = 0.001;
     // recomb_op.cpp
     void leader_mutate(agent* a);
     void variable_intersect(agent* a, agent* b);
+    void exchange_branch(agent* a, agent* b);
 
     // gp.cpp
     void breed(agent* leader);

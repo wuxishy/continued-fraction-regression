@@ -8,6 +8,7 @@
 #define __DATA_STORE_HPP
 
 class fraction;
+#include <iosfwd>
 
 #include <vector>
 
@@ -23,6 +24,8 @@ struct data_store {
     void read(const char* filename);
 
     double eval_fit(fraction& frac);
+
+    void print_val(const char* filename, fraction& frac);
 };
 
 #endif // __DATA_STORE_HPP

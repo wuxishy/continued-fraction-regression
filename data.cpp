@@ -7,6 +7,7 @@
 #include "data.hpp"
 #include "fraction.hpp"
 
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -26,7 +27,7 @@ void data_store::read(const char* filename) {
         std::getline(fin, line);
         
         double tmp;
-        std::stringstream tokenizer(line);
+        std::istringstream tokenizer(line);
 
         tokenizer >> tmp;
         expected.push_back(tmp);
@@ -53,4 +54,13 @@ double data_store::eval_fit(fraction& frac) {
     }
     
     return std::sqrt(ret);
+}
+
+void data_store::print_val(const char* filename, fraction& frac) {
+    std::ofstream fout(filename);
+    
+    for(int i = 0; i < num_entry; ++i)
+        fout << frac.eval(input[i]) << ' ' << input[i][0] << std::endl;
+
+    fout.close();
 }

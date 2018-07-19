@@ -8,7 +8,7 @@
 #define __FUNC_HPP
 
 #include <vector>
-#include <string>
+#include <iosfwd>
 
 class func {
 private:
@@ -20,7 +20,7 @@ public:
 
     double eval(std::vector<double>& vars);
 
-    std::string show();
+    void show(std::ostream& out);
 
     friend class fraction;
     friend class population;

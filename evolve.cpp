@@ -15,7 +15,7 @@ void population::eval_fit(agent* a, int i) {
 }
 
 void population::recombine(agent* a, agent* b) {
-    variable_intersect(a, b);
+    exchange_branch(a, b);
 
     eval_fit(a, 1);
 
