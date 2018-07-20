@@ -4,6 +4,8 @@
  * DATE: July, 2016
  *********************/
 
+// handles how the population is initialized
+
 #include "gp.hpp"
 #include "agent.hpp"
 

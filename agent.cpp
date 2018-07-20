@@ -44,6 +44,7 @@ void agent::update_pocket() {
         agent::swap(this, 0, this, 1);
 }
 
+// kind of like a heap initialization
 void agent::movedown_pocket() {
     update_pocket();
 

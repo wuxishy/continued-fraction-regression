@@ -4,12 +4,16 @@
  * DATE: July, 2018
  **********************/
 
+// continued fraction representation
+
 #ifndef __FRACTION_HPP
 #define __FRACTION_HPP
 
+// forward declare
+#include <iosfwd>
+
 // include
 #include <vector>
-#include <iosfwd>
 
 #include "func.hpp"
 
@@ -28,6 +32,7 @@ public:
     double constant;
     std::vector<func> repr;
 
+    // debug output
     void show(std::ostream& out);
 };
 

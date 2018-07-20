@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -g -Wall -Wextra -pedantic
 
 LIST = main data gp agent fraction func init evolve \
-       recomb_op optimize
+       recomb_op mutate_op optimize
 
 SRC = $(addsuffix .cpp, $(LIST))
 OBJ = $(addprefix bin/, $(addsuffix .o, $(LIST)))

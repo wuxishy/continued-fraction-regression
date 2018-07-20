@@ -4,6 +4,8 @@
  * DATE: July, 2018
  *********************/
 
+// where everything happens
+
 #ifndef __GP_HPP
 #define __GP_HPP
 

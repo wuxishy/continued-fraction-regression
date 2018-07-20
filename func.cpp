@@ -7,7 +7,6 @@
 #include "func.hpp"
 
 #include "rng.hpp"
-
 #include <iostream>
 
 func::func(std::size_t n) : num_var(n) {

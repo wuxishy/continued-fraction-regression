@@ -4,14 +4,18 @@
  * Date: July, 2018
  **********************/
 
+// abstraction over the test data
+// TODO: cache fraction evaluation
+
 #ifndef __DATA_STORE_HPP
 #define __DATA_STORE_HPP
 
+// forward declare
 class fraction;
 #include <iosfwd>
 
+// include
 #include <vector>
-
 using std::vector;
 using std::size_t;
 
@@ -25,6 +29,7 @@ struct data_store {
 
     double eval_fit(fraction& frac);
 
+    // debugging purpose, only works for one variable
     void print_val(const char* filename, fraction& frac);
 };
 

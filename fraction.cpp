@@ -27,7 +27,8 @@ double fraction::eval(std::vector<double>& vars) {
 double fraction::eval(std::vector<double>& vars, std::size_t n) {
     if (n >= repr.size()) 
         n = repr.size() - 1;
-
+    
+    // evaluating form below
     double ret = 0;
     for(int i = n; i >= 0; --i)
         ret = repr[i].eval(vars) / (1 + ret);

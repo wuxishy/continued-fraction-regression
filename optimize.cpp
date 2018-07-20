@@ -4,9 +4,12 @@
  * Date: July, 2018
  ************************/
 
-#include <map>
+// performing local search
+
 #include "optimize.hpp"
 #include "fraction.hpp"
+
+#include <map>
 
 optimize::optimize(data_store& td) : test_data(td) {}
 
@@ -28,6 +31,7 @@ void optimize::run (int type, fraction& frac, vector<double>& coeff) {
 double optimize::eval_fit(fraction& frac, vector<double>& coeff, 
         const vector<double>& vars) {
     int k = 0;
+    // match values with the active dimensions
     for(size_t i = 0; i < coeff.size(); ++i) {
         if (vdim[i]) coeff[i] = vars[k++];
         else coeff[i] = 0;
@@ -36,6 +40,7 @@ double optimize::eval_fit(fraction& frac, vector<double>& coeff,
     return test_data.eval_fit(frac);
 }
 
+// simplified nelder mead for speed
 void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {
     using coord = vector<double>;
 
@@ -58,8 +63,10 @@ void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {
         return ret;
     };
 
+    // note: ordered by decreasing fitness (lower is better)
     std::multimap<double, coord, std::greater<double>> simplex;
 
+    // initial simplex
     coord tmp = coord(0);
     for(size_t i = 0; i < coeff.size(); ++i) {
         if(vdim[i]) tmp.push_back(coeff[i]);
@@ -75,6 +82,7 @@ void optimize::nelder_mead (fraction& frac, vector<double>& coeff) {
         if(i < ndim) tmp[i] += 2;
     }
 
+    // main loop
     int num = 0;
     while (simplex.begin()->first - (--simplex.end())->first > 1
            && num < 100) {

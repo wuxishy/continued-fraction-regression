@@ -7,8 +7,11 @@
 #ifndef __FUNC_HPP
 #define __FUNC_HPP
 
-#include <vector>
+// forward declare
 #include <iosfwd>
+
+// include
+#include <vector>
 
 class func {
 private:
@@ -20,6 +23,7 @@ public:
 
     double eval(std::vector<double>& vars);
 
+    // debug output
     void show(std::ostream& out);
 
     friend class fraction;

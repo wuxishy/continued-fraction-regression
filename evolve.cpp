@@ -4,6 +4,8 @@
  * DATE: July, 2018
  ***********************/
 
+// basic features of evolution
+
 #include "gp.hpp"
 #include "agent.hpp"
 

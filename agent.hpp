@@ -4,6 +4,8 @@
  * DATE: July, 2018
  *********************/
 
+// agents of the tree-based population
+
 #ifndef __AGENT_HPP
 #define __AGENT_HPP
 
