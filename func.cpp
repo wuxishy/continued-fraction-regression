@@ -13,7 +13,10 @@ func::func(std::size_t n) : num_var(n) {
     coeff = std::vector<double> (n);
 
     randreal rreal;
-    for(double& x : coeff) x = 4 * (rreal() - 0.5);
+    for(double& x : coeff) {
+        if (rreal() < 0.25) x = 0;
+        else x = 4 * (rreal() - 0.5);
+    }
 }
 
 double func::eval(std::vector<double>& vars) {

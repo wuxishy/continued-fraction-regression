@@ -27,6 +27,7 @@ public:
     void show(std::ostream& out);
 
     friend class fraction;
+    friend class optimize;
     friend class population;
 };
 

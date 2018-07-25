@@ -8,11 +8,10 @@
 #define __OPTIMIZE_HPP__
 
 // forward declare
-class fraction;
-class func;
 
 // include
 #include "data.hpp"
+#include "fraction.hpp"
 
 #include <vector>
 using std::vector;
@@ -21,18 +20,19 @@ using std::size_t;
 class optimize {
 private:
     data_store& test_data;
-    int ndim;
-    vector<bool> vdim;
+    fraction& frac;
+    fraction local_copy;
 
-    double eval_fit (fraction& frac, vector<double>& coeff, 
-    	const vector<double>& var);
-    void nelder_mead (fraction& frac, vector<double>& coeff);
+    using pii = std::pair<int, int>;
+    int ndim;
+    vector<pii> var_map;
+
+    double eval_fit();
+    void nelder_mead ();
 
 public:
-    optimize(data_store& td);
+    optimize(data_store& td, fraction& f);
 
-    void set_dim (int n, const vector<bool>& v);
-
-    void run (int type, fraction& frac, vector<double>& coeff);
+    void run (int type);
 };
 #endif // __OPTIMIZE_HPP__

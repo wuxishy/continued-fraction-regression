@@ -17,7 +17,7 @@
 #include <deque>
 
 population::population(data_store td) : test_data(td) {
-    root = new agent(3, 2);
+    root = new agent(4);
 
     rint = randint();
 
@@ -50,6 +50,7 @@ void population::breed(agent* leader) {
 
     for(std::size_t i = 0; i < n; ++i)
         breed(leader->children[i]);
+
 }
 
 // hard stop the simulation
@@ -63,8 +64,9 @@ void population::run(int n) {
         if (stop_condition()) break;
         
         // old age kill
-        if (i % 10 == 0) {
+        if (i % 25 == 0) {
             print();
+            
             root->member[0] = fraction(test_data.num_var);
             eval_fit(root, 0);
 
@@ -74,19 +76,7 @@ void population::run(int n) {
         breed(root);
     }
     print();
-    test_data.print_val("data.out", root->member[0]);
-    /*
-    optimize opt(test_data);
-    opt.set_dim(1, {true});
-    
-    fraction frac;
-    vector<double>& t = frac.repr[0].coeff;
-    //for(double i = 0; i < 3; i+=0.1) {
-    //    t[0] = i;
-    //    printf("%f %f\n", i, frac.eval_fit(num_entry, expected, data));
-    //}
-    opt.run(1, frac, t);
-    */
+    //test_data.print_val("data.out", root->member[0]);
 }
 
 bool population::check(agent* a) {
@@ -115,6 +105,12 @@ void population::print() {
     std::cout << root->fitness[1] << ' ';
     std::cout.precision(2);
     root->member[1].show(std::cout);
+    std::cout << std::endl;
+    
+    std::cout.precision(5);
+    std::cout << root->children[2]->fitness[1] << ' ';
+    std::cout.precision(2);
+    root->children[2]->member[1].show(std::cout);
     std::cout << std::endl;
 
     std::cout << std::endl;
