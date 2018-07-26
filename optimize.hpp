@@ -21,18 +21,18 @@ class optimize {
 private:
     data_store& test_data;
     fraction& frac;
-    fraction local_copy;
+    fraction buf;
 
     using pii = std::pair<int, int>;
     int ndim;
     vector<pii> var_map;
 
-    double eval_fit();
-    void nelder_mead ();
+    double eval_fit (const vector<double>& vec);
+    double nelder_mead ();
 
 public:
     optimize(data_store& td, fraction& f);
 
-    void run (int type);
+    double run (int type);
 };
 #endif // __OPTIMIZE_HPP__

@@ -60,7 +60,7 @@ bool population::stop_condition() {
 
 // run the simulation at most n iterations
 void population::run(int n) {
-    for(int i = 0; i < n; ++i) {
+    for(int i = n+1; i < n; ++i) {
         if (stop_condition()) break;
         
         // old age kill
@@ -75,6 +75,9 @@ void population::run(int n) {
 
         breed(root);
     }
+    print();
+    optimize opt(test_data, root->member[0]);
+    root->fitness[0] = opt.run(1);
     print();
     //test_data.print_val("data.out", root->member[0]);
 }
@@ -100,7 +103,7 @@ void population::print() {
     std::cout.precision(2);
     root->member[0].show(std::cout);
     std::cout << std::endl;
-
+    /*
     std::cout.precision(5);
     std::cout << root->fitness[1] << ' ';
     std::cout.precision(2);
@@ -114,24 +117,5 @@ void population::print() {
     std::cout << std::endl;
 
     std::cout << std::endl;
-    /*
-    std::deque<agent*> q;
-    q.push_back(root);
-    q.push_back(nullptr);
-
-    while(!q.empty()) {
-        agent* c = q.front();
-        q.pop_front();
-        if (!c) {
-            printf("\n");
-            if(q.empty()) break;
-            q.push_back(nullptr);
-            continue;
-        }
-        printf("[%.1f, %.1f] %.2f, [%.1f, %.1f] %.2f; ", c->member[0].repr[0].coeff[0], c->member[0].repr[1].coeff[0], c->fitness[0], c->member[1].repr[0].coeff[0], c->member[1].repr[1].coeff[0], c->fitness[1]);
-        if(c->depth > 1) 
-            for(std::size_t i = 0; i < c->degree; ++i) q.push_back(c->children[i]); 
-    }
-    printf("\n");
     */
 }
