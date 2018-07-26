@@ -47,8 +47,6 @@ private:
     void print();
 
 public:
-    static constexpr double eps = 0.001;
-    
     population(data_store td);
     ~population();
 

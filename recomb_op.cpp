@@ -19,18 +19,21 @@ void population::variable_intersect(agent* a, agent* b) {
                 b->member[1].repr.size())) - 1;
     
     vector<double>& acoeff = a->member[1].repr[ind].coeff;
+    vector<bool>& afeature = a->member[1].repr[ind].feature;
     vector<double>& bcoeff = b->member[1].repr[ind].coeff;
+    vector<bool>& bfeature = b->member[1].repr[ind].feature;
     
     // find the shared varaiables
     vector<double> new_coeff(test_data.num_var);
     for(int i = 0; i < test_data.num_var; ++i) {
-        if (std::abs(acoeff[i]) > eps && std::abs(bcoeff[i]) > eps) {
+        if (afeature[i] && bfeature[i]) {
             // six equally spaced points around the parents
             new_coeff[i] = acoeff[i] + rint(-1, 4) * (bcoeff[i] - acoeff[i]) / 3;
         }
     }
 
     acoeff = new_coeff;
+    a->member[1].repr[ind].find_feature();
 }
 
 void population::variable_union(agent* a, agent* b) {
@@ -38,22 +41,25 @@ void population::variable_union(agent* a, agent* b) {
                 b->member[1].repr.size())) - 1;
     
     vector<double>& acoeff = a->member[1].repr[ind].coeff;
+    vector<bool>& afeature = a->member[1].repr[ind].feature;
     vector<double>& bcoeff = b->member[1].repr[ind].coeff;
+    vector<bool>& bfeature = b->member[1].repr[ind].feature;
     
     // find the shared varaiables
     vector<double> new_coeff(test_data.num_var);
     for(int i = 0; i < test_data.num_var; ++i) {
-        if (std::abs(acoeff[i]) > eps && std::abs(bcoeff[i]) > eps) {
+        if (afeature[i] && bfeature[i]) {
             // six equally spaced points around the parents
             new_coeff[i] = acoeff[i] + rint(-1, 4) * (bcoeff[i] - acoeff[i]) / 3;
         }
-        else if (std::abs(acoeff[i]) > eps)
+        else if (afeature[i])
             new_coeff[i] = acoeff[i];
-        else if (std::abs(bcoeff[i]) > eps)
+        else if (bfeature[i])
             new_coeff[i] = bcoeff[i];
     }
 
     acoeff = new_coeff;
+    a->member[1].repr[ind].find_feature();
 }
 
 void population::exchange_branch(agent* a, agent* b) {

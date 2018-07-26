@@ -17,7 +17,7 @@ optimize::optimize(data_store& td, fraction& f) :
 
     for(size_t i = 0; i < frac.repr.size(); ++i) {
         for(size_t j = 0; j < frac.repr[i].coeff.size(); ++j) {
-            if(std::abs(frac.repr[i].coeff[j]) > population::eps) {
+            if(frac.repr[i].feature[j]) {
                 ++ndim;
                 var_map.push_back({i, j});
             }

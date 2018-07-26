@@ -11,11 +11,22 @@
 
 func::func(std::size_t n) : num_var(n) {
     coeff = std::vector<double> (n);
+    feature = std::vector<bool> (n, true);
 
-    randreal rreal;
-    for(double& x : coeff) {
-        if (rreal() < 0.25) x = 0;
-        else x = 4 * (rreal() - 0.5);
+    randint rint;
+    for(std::size_t i = 0; i < n; ++i) {
+        coeff[i] = rint(-5, 5);
+        if (coeff[i] == 0) feature[i] = false; 
+    }
+}
+
+void func::find_feature() {
+    for(std::size_t i = 0; i < coeff.size(); ++i) {
+        if(std::abs(coeff[i]) < eps) {
+            coeff[i] = 0;
+            feature[i] = false;
+        }
+        else feature[i] = true;
     }
 }
 

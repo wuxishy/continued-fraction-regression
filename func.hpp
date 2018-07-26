@@ -16,9 +16,14 @@
 class func {
 private:
     std::size_t num_var;
+    std::vector<bool> feature;
     std::vector<double> coeff;
 
+    void find_feature();
+
 public:
+    static constexpr double eps = 0.001;
+
     func(std::size_t n = 1);
 
     double eval(std::vector<double>& vars);
