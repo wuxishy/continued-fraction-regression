@@ -19,7 +19,7 @@ using std::size_t;
 
 class optimize {
 private:
-    data_store& test_data;
+    const data_store& test_data;
     fraction& frac;
     fraction buf;
 

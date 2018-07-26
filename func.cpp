@@ -30,7 +30,7 @@ void func::find_feature() {
     }
 }
 
-double func::eval(std::vector<double>& vars) {
+double func::eval(const std::vector<double>& vars) {
     double ret = 0;
 
     for(std::size_t i = 0; i < num_var; ++i) {

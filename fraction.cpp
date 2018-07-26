@@ -20,11 +20,11 @@ fraction::fraction(std::size_t n) : num_var(n) {
     for (func& x : repr) x = func(num_var);
 }
 
-double fraction::eval(std::vector<double>& vars) {
+double fraction::eval(const std::vector<double>& vars) {
     return eval(vars, repr.size() - 1);
 }
 
-double fraction::eval(std::vector<double>& vars, std::size_t n) {
+double fraction::eval(const std::vector<double>& vars, std::size_t n) {
     if (n >= repr.size()) 
         n = repr.size() - 1;
     

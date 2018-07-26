@@ -39,9 +39,12 @@ void agent::swap(agent* a, int i, agent* b, int j) {
     b->member[j] = tmp_frac;
 }
 
-void agent::update_pocket() {
-    if(fitness[0] > fitness[1]) 
+bool agent::update_pocket() {
+    if(fitness[0] > fitness[1]) {
         agent::swap(this, 0, this, 1);
+        return true;
+    }
+    return false;
 }
 
 // kind of like a heap initialization
@@ -66,12 +69,14 @@ void agent::movedown_pocket() {
     }
 }
 
+// TODO: there seem to be a better way
 void agent::propagate_pocket() {
     // already the leader
     if (!this->parent) return;
 
-    if(fitness[0] < this->parent->fitness[0]) {
+    while(fitness[0] < this->parent->fitness[0]) {
         agent::swap(this, 0, this->parent, 0);
-        return this->parent->propagate_pocket();
+        this->parent->propagate_pocket();
+        this->update_pocket();
     }
 }

@@ -8,10 +8,12 @@
 
 #include "gp.hpp"
 #include "agent.hpp"
+#include "optimize.hpp"
 
 #include <cmath>
 #include "rng.hpp"
 
+#include <cassert>
 #include <iostream> 
 
 void population::eval_fit(agent* a, int i) {
@@ -19,7 +21,7 @@ void population::eval_fit(agent* a, int i) {
 }
 
 void population::recombine(agent* a, agent* b) {
-    double tmp = a->fitness[1];
+    //double tmp = a->fitness[1];
 
     switch(rint(2, 3)) {
         case 1:
@@ -34,12 +36,12 @@ void population::recombine(agent* a, agent* b) {
     }
 
     eval_fit(a, 1);
-
+/*
     if (a->fitness[1] < tmp || a->fitness[1] < b->fitness[1])
         std::cerr << "Rich!" << std::endl;
     else
         std::cerr << "Poor!" << std::endl;
-
+*/
     a->update_pocket();
     a->propagate_pocket();
 }
@@ -51,4 +53,24 @@ void population::mutate(agent* a) {
 
     a->update_pocket();
     a->propagate_pocket();
+}
+
+void population::local_search(agent* a) {
+    optimize opt(test_data, a->member[1]);
+    a->fitness[1] = opt.run(1);
+
+    if (a->fitness[0] > a->fitness[1]) {
+        optimize more_opt(test_data, a->member[0]);
+        a->fitness[0] = more_opt.run(1);
+    }
+
+    a->update_pocket();
+    a->propagate_pocket();
+    
+    assert(check(root));
+
+    if (a->depth > 1) {
+        for(std::size_t i = 0; i < a->degree; ++i)
+            local_search(a->children[i]);
+    }
 }

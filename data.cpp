@@ -43,7 +43,7 @@ void data_store::read(const char* filename) {
     fin.close();
 }
 
-double data_store::eval_fit(fraction& frac) { 
+double data_store::eval_fit(fraction& frac) const { 
     double ret = 0;
 
     auto sqr = [] (double x) -> double { return x*x; };
@@ -52,7 +52,7 @@ double data_store::eval_fit(fraction& frac) {
         ret += sqr(expected[i] - frac.eval(input[i]));
     }
     
-    return std::sqrt(ret);
+    return ret / num_entry;
 }
 
 void data_store::print_val(const char* filename, fraction& frac) {

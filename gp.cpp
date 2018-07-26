@@ -50,7 +50,6 @@ void population::breed(agent* leader) {
 
     for(std::size_t i = 0; i < n; ++i)
         breed(leader->children[i]);
-
 }
 
 // hard stop the simulation
@@ -60,10 +59,11 @@ bool population::stop_condition() {
 
 // run the simulation at most n iterations
 void population::run(int n) {
-    for(int i = n+1; i < n; ++i) {
+    for(int i = 0; i < n; ++i) {
         if (stop_condition()) break;
         
         // old age kill
+        /*
         if (i % 25 == 0) {
             print();
             
@@ -72,25 +72,34 @@ void population::run(int n) {
 
             root->movedown_pocket();
         }
+        */
+
+        if (i > 0 && i % 30 == 0) {
+            local_search(root);
+            print();
+        }
 
         breed(root);
     }
-    print();
-    optimize opt(test_data, root->member[0]);
-    root->fitness[0] = opt.run(1);
     print();
     //test_data.print_val("data.out", root->member[0]);
 }
 
 bool population::check(agent* a) {
-    if (a->fitness[0] > a->fitness[1]) return false;
+    if (a->fitness[0] > a->fitness[1]) {
+        std::cerr << "Pocket! " << a->depth << std::endl;
+        return false;
+    }
 
     if (a->depth <= 1) return true;
 
     for(std::size_t i = 0; i < a->degree; ++i) {
         if (!check(a->children[i])) return false;
 
-        if (a->fitness[0] > a->children[i]->fitness[0]) return false;
+        if (a->fitness[0] > a->children[i]->fitness[0]) {
+            std::cerr << "Parent! " << a->depth << std::endl;
+            return false;
+        }
     }
 
     return true;
@@ -103,13 +112,13 @@ void population::print() {
     std::cout.precision(2);
     root->member[0].show(std::cout);
     std::cout << std::endl;
-    /*
+    
     std::cout.precision(5);
     std::cout << root->fitness[1] << ' ';
     std::cout.precision(2);
     root->member[1].show(std::cout);
     std::cout << std::endl;
-    
+    /*
     std::cout.precision(5);
     std::cout << root->children[2]->fitness[1] << ' ';
     std::cout.precision(2);

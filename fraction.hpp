@@ -25,9 +25,9 @@ private:
 public:
     fraction(std::size_t n=1);
 
-    double eval(std::vector<double>& vars);
+    double eval(const std::vector<double>& vars);
     // evaluate to nth level
-    double eval(std::vector<double>& vars, std::size_t n);
+    double eval(const std::vector<double>& vars, std::size_t n);
     
     double constant;
     std::vector<func> repr;

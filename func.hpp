@@ -26,7 +26,7 @@ public:
 
     func(std::size_t n = 1);
 
-    double eval(std::vector<double>& vars);
+    double eval(const std::vector<double>& vars);
 
     // debug output
     void show(std::ostream& out);

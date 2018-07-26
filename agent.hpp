@@ -26,7 +26,7 @@ private:
 
     static void swap(agent* a, int i, agent* b, int j);
 
-    void update_pocket();
+    bool update_pocket();
     void movedown_pocket();
     void propagate_pocket();
 
