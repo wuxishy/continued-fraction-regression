@@ -81,8 +81,7 @@ void population::run(int n) {
 
         breed(root);
     }
-    print();
-    //test_data.print_val("data.out", root->member[0]);
+    test_data.print_val("data.out.csv", root->member[0]);
 }
 
 bool population::check(agent* a) {

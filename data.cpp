@@ -59,7 +59,7 @@ void data_store::print_val(const char* filename, fraction& frac) {
     std::ofstream fout(filename);
     
     for(int i = 0; i < num_entry; ++i)
-        fout << frac.eval(input[i]) << ' ' << input[i][0] << std::endl;
+        fout << expected[i] << ',' << frac.eval(input[i]) << std::endl;
 
     fout.close();
 }
