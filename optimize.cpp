@@ -15,7 +15,8 @@ optimize::optimize(data_store& td, fraction& f) :
         test_data(td), frac(f) {
     buf = frac; 
 
-    ndim = 0;
+    ndim = 1;
+    var_map.push_back({0, 0}); //for convenience
     for(size_t i = 0; i < frac.repr.size(); ++i) {
         for(size_t j = 0; j < frac.repr[i].coeff.size(); ++j) {
             if(frac.repr[i].feature[j]) {
@@ -36,7 +37,8 @@ double optimize::run (int type) {
 }
 
 double optimize::eval_fit(const vector<double>& vec) {
-    for(int i = 0; i < ndim; ++i) {
+    buf.constant = vec[0];
+    for(int i = 1; i < ndim; ++i) {
         pii& pos = var_map[i];
         buf.repr[pos.first].coeff[pos.second] = vec[i];
     }
@@ -83,7 +85,8 @@ double optimize::nelder_mead () {
     // http://www.scholarpedia.org/article/Nelder-Mead_algorithm#Initial_simplex
     double step = 2.0;
     coord tmp(ndim);
-    for(int i = 0; i < ndim; ++i) {
+    tmp[0] = frac.constant;
+    for(int i = 1; i < ndim; ++i) {
         pii& pos = var_map[i];
         tmp[i] = frac.repr[pos.first].coeff[pos.second];
     }
