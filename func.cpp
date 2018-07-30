@@ -15,7 +15,7 @@ func::func(std::size_t n) : num_var(n) {
 
     randint rint;
     for(std::size_t i = 0; i < n; ++i) {
-        coeff[i] = rint(-5, 5);
+        coeff[i] = rint(-3, 3);
         if (coeff[i] == 0) feature[i] = false; 
     }
 }

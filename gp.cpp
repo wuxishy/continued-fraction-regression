@@ -61,7 +61,7 @@ bool population::stop_condition() {
 void population::run(int n) {
     for(int i = 0; i < n; ++i) {
         if (stop_condition()) break;
-        
+
         // old age kill
         /*
         if (i % 25 == 0) {
@@ -123,7 +123,7 @@ void population::print() {
     std::cout.precision(2);
     root->children[2]->member[1].show(std::cout);
     std::cout << std::endl;
-
-    std::cout << std::endl;
     */
+    std::cout << std::endl;
+    
 }

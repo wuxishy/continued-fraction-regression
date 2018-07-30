@@ -23,15 +23,15 @@ void population::eval_fit(agent* a, int i) {
 void population::recombine(agent* a, agent* b) {
     //double tmp = a->fitness[1];
 
-    switch(rint(2, 3)) {
+    switch(rint(1, 5)) {
         case 1:
             exchange_branch(a, b);
             break;
         case 2:
-            variable_intersect(a, b);
-            break;
-        case 3:
             variable_union(a, b);
+            break;
+        default:
+            variable_intersect(a, b);
             break;
     }
 

@@ -15,11 +15,11 @@
 #include "func.hpp"
 
 void population::variable_intersect(agent* a, agent* b) {
-    int ind = rint(1, std::min(a->member[1].repr.size(), 
-                b->member[1].repr.size())) - 1;
+    int ind = rint(1, std::min(a->member[0].repr.size(), 
+        std::min(a->member[1].repr.size(), b->member[1].repr.size()))) - 1;
     
-    vector<double>& acoeff = a->member[1].repr[ind].coeff;
-    vector<bool>& afeature = a->member[1].repr[ind].feature;
+    vector<double>& acoeff = a->member[0].repr[ind].coeff;
+    vector<bool>& afeature = a->member[0].repr[ind].feature;
     vector<double>& bcoeff = b->member[1].repr[ind].coeff;
     vector<bool>& bfeature = b->member[1].repr[ind].feature;
     
@@ -32,16 +32,16 @@ void population::variable_intersect(agent* a, agent* b) {
         }
     }
 
-    acoeff = new_coeff;
+    a->member[1].repr[ind].coeff = new_coeff;
     a->member[1].repr[ind].find_feature();
 }
 
 void population::variable_union(agent* a, agent* b) {
-    int ind = rint(1, std::min(a->member[1].repr.size(), 
-                b->member[1].repr.size())) - 1;
+    int ind = rint(1, std::min(a->member[0].repr.size(), 
+        std::min(a->member[1].repr.size(), b->member[1].repr.size()))) - 1;
     
-    vector<double>& acoeff = a->member[1].repr[ind].coeff;
-    vector<bool>& afeature = a->member[1].repr[ind].feature;
+    vector<double>& acoeff = a->member[0].repr[ind].coeff;
+    vector<bool>& afeature = a->member[0].repr[ind].feature;
     vector<double>& bcoeff = b->member[1].repr[ind].coeff;
     vector<bool>& bfeature = b->member[1].repr[ind].feature;
     
@@ -58,15 +58,16 @@ void population::variable_union(agent* a, agent* b) {
             new_coeff[i] = bcoeff[i];
     }
 
-    acoeff = new_coeff;
+    a->member[1].repr[ind].coeff = new_coeff;
     a->member[1].repr[ind].find_feature();
 }
 
 void population::exchange_branch(agent* a, agent* b) {
-    int ind = rint(1, std::min(a->member[1].repr.size(), 
+    int ind = rint(1, std::min(a->member[0].repr.size(), 
                 b->member[1].repr.size())) - 1;
 
     // make a cut
+    a->member[1].repr = a->member[0].repr;
     a->member[1].repr.resize(ind);
 
     // copy the branch from b to a;
