@@ -59,23 +59,32 @@ bool population::stop_condition() {
 
 // run the simulation at most n iterations
 void population::run(int n) {
+    double best = root->fitness[0];
+    double cur_best = root->fitness[0];
+    
+    int counter = 0;
     for(int i = 0; i < n; ++i) {
         if (stop_condition()) break;
 
-        // old age kill
-        /*
-        if (i % 25 == 0) {
-            print();
-            
-            root->member[0] = fraction(test_data.num_var);
-            eval_fit(root, 0);
-
-            root->movedown_pocket();
-        }
-        */
-
         if (i > 0 && i % 30 == 0) {
             local_search(root);
+            
+            if (root->fitness[0] >= cur_best) ++counter;
+            else counter = 0;
+
+            // kill if the best solution got stuck
+            if (counter > 2) {
+                root->member[0] = fraction(test_data.num_var);
+                eval_fit(root, 0);
+
+                root->movedown_pocket();
+
+                counter = 0;
+            }
+
+            cur_best = root->fitness[0];
+            best = std::min(best, cur_best);
+            
             print();
         }
 
