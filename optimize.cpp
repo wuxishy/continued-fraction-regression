@@ -163,5 +163,7 @@ double optimize::nelder_mead () {
     double ret = eval_fit((--simplex.end())->second);
     // now buf contains the best
     frac = buf;
+    for(func& f : frac.repr) f.find_feature();
+
     return ret;
 }

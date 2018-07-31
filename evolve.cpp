@@ -47,7 +47,13 @@ void population::recombine(agent* a, agent* b) {
 }
 
 void population::mutate(agent* a) {
-    return;
+    if(rint(1, 5) == 1) {
+        // only mutate if current is too close or much worse
+        // that pocket
+        if (a->fitness[1] < 1.2 * a->fitness[0] || 
+                a->fitness[1] > 2 * a->fitness[0])
+            feature_toggle(a->member[1]);
+    }
 
     eval_fit(a, 1);
 

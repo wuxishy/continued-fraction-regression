@@ -15,7 +15,7 @@ fraction::fraction(std::size_t n) : num_var(n) {
 
     randint rint;
 
-    repr = std::vector<func>(rint(2, 10));
+    repr = std::vector<func>(rint(7, 10));
 
     for (func& x : repr) x = func(num_var);
 }

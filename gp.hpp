@@ -11,6 +11,7 @@
 
 // forward declare
 class agent;
+class fraction;
 
 // include
 #include <vector>
@@ -38,6 +39,9 @@ private:
     void variable_intersect(agent* a, agent* b);
     void variable_union(agent* a, agent* b);
     void exchange_branch(agent* a, agent* b);
+
+    // mutate_op.cpp
+    void feature_toggle(fraction& frac);
 
     // gp.cpp
     void breed(agent* leader);
