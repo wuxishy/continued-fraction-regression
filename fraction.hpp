@@ -34,6 +34,8 @@ public:
 
     // debug output
     void show(std::ostream& out);
+    // latex output
+    void show_latex(std::ostream& out);
 };
 
 #endif // __FRACTION_HPP

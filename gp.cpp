@@ -90,6 +90,11 @@ void population::run(int n) {
 
         breed(root);
     }
+    
+    std::cout.precision(2);
+    root->member[0].show_latex(std::cout);
+    std::cout << std::endl;
+
     test_data.print_val("data.out.csv", root->member[0]);
 }
 

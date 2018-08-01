@@ -46,3 +46,23 @@ void fraction::show(std::ostream& out) {
 
     out << "]";
 }
+
+void fraction::show_latex(std::ostream& out) {
+    out << '$' << constant << '+';
+    
+    for(std::size_t i = 0; i < repr.size(); ++i) {
+        if (i == repr.size() - 1) {
+            repr[i].show_latex(out);
+        }
+        else {
+            out << "\\cfrac{";
+            repr[i].show_latex(out);
+            out << "}{1+";
+        }
+    }
+    
+    for(std::size_t i = 0; i < repr.size()-1; ++i)
+        out << '}';
+
+    out << '$';
+}
