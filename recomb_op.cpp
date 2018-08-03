@@ -34,6 +34,9 @@ void population::variable_intersect(agent* a, agent* b) {
 
     a->member[1].repr[ind].coeff = new_coeff;
     a->member[1].repr[ind].find_feature();
+
+    a->member[1].constant = a->member[0].constant + rint(-1, 4) *
+        (b->member[1].constant - a->member[0].constant) / 3;
 }
 
 void population::variable_union(agent* a, agent* b) {
@@ -60,6 +63,9 @@ void population::variable_union(agent* a, agent* b) {
 
     a->member[1].repr[ind].coeff = new_coeff;
     a->member[1].repr[ind].find_feature();
+
+    a->member[1].constant = a->member[0].constant + rint(-1, 4) *
+        (b->member[1].constant - a->member[0].constant) / 3;
 }
 
 void population::exchange_branch(agent* a, agent* b) {
@@ -73,5 +79,8 @@ void population::exchange_branch(agent* a, agent* b) {
     // copy the branch from b to a;
     for(size_t i = ind; i < b->member[1].repr.size(); ++i)
         a->member[1].repr.push_back(b->member[1].repr[i]);
+
+    a->member[1].constant = a->member[0].constant + rint(-1, 4) *
+        (b->member[1].constant - a->member[0].constant) / 3;
 }
 

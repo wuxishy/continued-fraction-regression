@@ -60,13 +60,16 @@ bool population::stop_condition() {
 // run the simulation at most n iterations
 void population::run(int n) {
     double best = root->fitness[0];
+    fraction sol = root->member[0];
     double cur_best = root->fitness[0];
-    
+
     int counter = 0;
-    for(int i = 0; i < n; ++i) {
+    for(int i = 1; i <= n; ++i) {
         if (stop_condition()) break;
 
-        if (i > 0 && i % 30 == 0) {
+        breed(root);
+
+        if (i % 10 == 0) {
             local_search(root);
             
             if (root->fitness[0] >= cur_best) ++counter;
@@ -81,21 +84,24 @@ void population::run(int n) {
 
                 counter = 0;
             }
-
-            cur_best = root->fitness[0];
-            best = std::min(best, cur_best);
             
             print();
         }
 
-        breed(root);
+        cur_best = root->fitness[0];
+        if (cur_best < best) {
+            best = cur_best;
+            sol = root->member[0];
+        }
     }
     
+    std::cout.precision(5);
+    std::cout << best << "\n";
     std::cout.precision(2);
-    root->member[0].show_latex(std::cout);
+    sol.show_latex(std::cout);
     std::cout << std::endl;
 
-    test_data.print_val("data.out.csv", root->member[0]);
+    test_data.print_val("data.out.csv", sol);
 }
 
 bool population::check(agent* a) {
