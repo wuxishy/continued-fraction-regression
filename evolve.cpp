@@ -80,3 +80,25 @@ void population::local_search(agent* a) {
             local_search(a->children[i]);
     }
 }
+
+void population::diversify(agent* a) {
+    if (a->depth > 1) {
+        for(std::size_t i = 0; i < a->degree; ++i)
+            diversify(a->children[i]);
+    }
+
+    // kill the pocket if too close to parent
+    if (a->parent) {
+        if (a->fitness[0] < 1.01 * a->parent->fitness[0] &&
+                // also add a coin toss
+                rint(1, 2) == 1) {
+
+            a->member[0] = fraction(test_data.num_var);
+            eval_fit(a, 0);
+
+            a->movedown_pocket();
+            // in case someone unleashed RNGesus
+            a->propagate_pocket();
+        }
+    }
+}

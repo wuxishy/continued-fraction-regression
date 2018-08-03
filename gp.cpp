@@ -70,6 +70,8 @@ void population::run(int n) {
         breed(root);
 
         if (i % 10 == 0) {
+            diversify(root);
+
             local_search(root);
             
             if (root->fitness[0] >= cur_best) ++counter;
