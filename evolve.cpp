@@ -62,6 +62,11 @@ void population::mutate(agent* a) {
 }
 
 void population::local_search(agent* a) {
+    if (a->depth > 1) {
+        for(std::size_t i = 0; i < a->degree; ++i)
+            local_search(a->children[i]);
+    }
+    
     optimize opt(test_data, a->member[1]);
     a->fitness[1] = opt.run(1);
 
@@ -70,15 +75,7 @@ void population::local_search(agent* a) {
         a->fitness[0] = more_opt.run(1);
     }
 
-    a->update_pocket();
-    a->propagate_pocket();
-    
-    assert(check(root));
-
-    if (a->depth > 1) {
-        for(std::size_t i = 0; i < a->degree; ++i)
-            local_search(a->children[i]);
-    }
+    a->movedown_pocket();
 }
 
 void population::diversify(agent* a) {
@@ -95,10 +92,49 @@ void population::diversify(agent* a) {
 
             a->member[0] = fraction(test_data.num_var);
             eval_fit(a, 0);
-
-            a->movedown_pocket();
-            // in case someone unleashed RNGesus
-            a->propagate_pocket();
         }
     }
+    a->movedown_pocket();
+}
+
+void population::simplify(agent* a) {
+    if (a->depth > 1) {
+        for(std::size_t i = 0; i < a->degree; ++i)
+            simplify(a->children[i]);
+    }
+    
+    fraction& frac = a->member[1];
+    
+    int total = 0;
+    vector<int> occur(test_data.num_var, 0);
+    
+    for(func& f : frac.repr)
+        for(int i = 0; i < test_data.num_var; ++i) {
+            occur[i] += f.feature[i];
+            total += f.feature[i];
+        }
+
+    int num_feature = 0;
+    for(int x : occur) num_feature += (x > 0);
+    // do not touch if number of features is already small
+    if (num_feature <= 2 || num_feature <= 0.1 * test_data.num_var)
+        return;
+
+    // randomly kill off less common feature
+    for(int i = 0; i < test_data.num_var; ++i) {
+        // do not touch those common ones
+        if (occur[i] * test_data.num_var >= 2 * total) continue;
+
+        // less common -> more likely to die
+        if (rint(1, total) > occur[i]) {
+            for (func& f : frac.repr) {
+                f.feature[i] = false;
+                f.coeff[i] = 0;
+            }
+        }
+    }
+
+    eval_fit(a, 1);
+
+    a->movedown_pocket();
 }

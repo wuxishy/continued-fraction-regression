@@ -68,6 +68,9 @@ void population::run(int n) {
         if (stop_condition()) break;
 
         breed(root);
+        
+        if (i % 20 == 0)
+            simplify(root);
 
         if (i % 10 == 0) {
             diversify(root);
