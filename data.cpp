@@ -48,8 +48,14 @@ double data_store::eval_fit(fraction& frac) const {
     for(int i = 0; i < num_entry; ++i) {
         ret += sqr(expected[i] - frac.eval(input[i]));
     }
-    
+   
     return ret / num_entry;
+}
+
+double data_store::adjust_fit(fraction& frac, double fit) const {
+    double factor = std::max(1.0, 1 + (frac.num_feature()-3) * 0.5);
+
+    return factor * fit;
 }
 
 void data_store::print_val(const char* filename, fraction& frac) {

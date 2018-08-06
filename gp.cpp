@@ -69,11 +69,11 @@ void population::run(int n) {
 
         breed(root);
         
-        if (i % 20 == 0)
-            simplify(root);
+//        if (i % 20 == 0)
+//            simplify(root);
 
-        if (i % 10 == 0) {
-            diversify(root);
+        if (i % 30 == 0) {
+//            diversify(root);
 
             local_search(root);
             
@@ -101,7 +101,7 @@ void population::run(int n) {
     }
     
     std::cout.precision(5);
-    std::cout << best << "\n";
+    std::cout << test_data.eval_fit(sol) << "\n";
     std::cout.precision(2);
     sol.show_latex(std::cout);
     std::cout << std::endl;

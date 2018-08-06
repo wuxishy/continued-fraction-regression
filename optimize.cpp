@@ -165,5 +165,5 @@ double optimize::nelder_mead () {
     frac = buf;
     for(func& f : frac.repr) f.find_feature();
 
-    return ret;
+    return test_data.adjust_fit(frac, ret);
 }

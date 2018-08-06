@@ -32,12 +32,15 @@ public:
     double constant;
     std::vector<func> repr;
 
+    int num_feature();
     // debug output
     void show(std::ostream& out);
     // latex output
     void show_latex(std::ostream& out);
     // math output
     void show_math(std::ostream& out);
+
+    friend class population;
 };
 
 #endif // __FRACTION_HPP

@@ -17,7 +17,8 @@
 #include <iostream> 
 
 void population::eval_fit(agent* a, int i) {
-    a->fitness[i] = test_data.eval_fit(a->member[i]);
+    a->fitness[i] = test_data.adjust_fit(a->member[i], 
+            test_data.eval_fit(a->member[i]));
 }
 
 void population::recombine(agent* a, agent* b) {
