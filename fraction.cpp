@@ -66,3 +66,20 @@ void fraction::show_latex(std::ostream& out) {
 
     out << '$';
 }
+
+void fraction::show_math(std::ostream& out) {
+    out << constant << '+';
+    
+    for(std::size_t i = 0; i < repr.size(); ++i) {
+        if (i == repr.size() - 1) {
+            repr[i].show_math(out);
+        }
+        else {
+            repr[i].show_math(out);
+            out << "/(1+";
+        }
+    }
+    
+    for(std::size_t i = 0; i < repr.size()-1; ++i)
+        out << ')';
+}

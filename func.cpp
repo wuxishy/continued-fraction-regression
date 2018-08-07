@@ -71,3 +71,25 @@ void func::show_latex(std::ostream& out) {
 
     out <<  '}';
 }
+
+void func::show_math(std::ostream& out) {
+    out << '(';
+
+    bool printed = false;
+    for(std::size_t i = 0; i < num_var; ++i) {
+        if (!feature[i]) continue;
+
+        if (printed) {
+            out << (coeff[i] > 0 ? '+' : '-');
+            out << std::abs(coeff[i]) << "*x_" << i;
+        }
+        else {
+            out << coeff[i] << "*x_" << i;
+            printed = true;
+        }
+    }
+    // if no feature was on
+    if(!printed) out << 0;
+
+    out <<  ')';
+}

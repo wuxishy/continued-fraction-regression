@@ -105,6 +105,8 @@ void population::run(int n) {
     std::cout.precision(2);
     sol.show_latex(std::cout);
     std::cout << std::endl;
+    sol.show_math(std::cout);
+    std::cout << std::endl;
 
     test_data.print_val("data.out.csv", sol);
 }

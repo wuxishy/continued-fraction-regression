@@ -32,6 +32,8 @@ public:
     void show(std::ostream& out);
     // latex output
     void show_latex(std::ostream& out);
+    // math output
+    void show_math(std::ostream& out);
 
     friend class fraction;
     friend class optimize;
