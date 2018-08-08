@@ -27,6 +27,7 @@ struct data_store {
 
     void read(const char* filename);
 
+    double eval_raw_fit(fraction& frac) const;
     double eval_fit(fraction& frac) const;
     double adjust_fit(fraction& frac, double fit) const;
 

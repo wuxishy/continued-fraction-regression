@@ -11,6 +11,9 @@
 #include <string>
 
 #include <cmath>
+#include <numeric>
+#include <algorithm>
+
 #include "omp.h"
 
 #include <cassert>
@@ -39,7 +42,7 @@ void data_store::read(const char* filename) {
     fin.close();
 }
 
-double data_store::eval_fit(fraction& frac) const { 
+double data_store::eval_raw_fit(fraction& frac) const { 
     double ret = 0;
 
     auto sqr = [] (double x) -> double { return x*x; };
@@ -50,6 +53,24 @@ double data_store::eval_fit(fraction& frac) const {
     }
    
     return ret / num_entry;
+}
+
+double data_store::eval_fit(fraction& frac) const {
+    double* arr = new double[num_entry];
+
+    #pragma omp parallel for
+    for(int i = 0; i < num_entry; ++i) {
+        arr[i] = std::abs(expected[i] - frac.eval(input[i]));
+    }
+
+    int q1 = num_entry/4, q3 = 3*num_entry/4;
+    std::sort(arr, arr+num_entry);
+
+    double ret = std::accumulate(arr+q1, arr+q3+1, 0.0);
+
+    delete[] arr;
+
+    return ret / (q3-q1+1);
 }
 
 double data_store::adjust_fit(fraction& frac, double fit) const {
