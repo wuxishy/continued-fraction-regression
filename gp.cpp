@@ -38,8 +38,6 @@ void population::breed(agent* leader) {
     std::size_t n = leader->degree;
 
     //print();
-    assert(check(root));
-
     recombine(leader, leader->children[n-1]);
 
     recombine(leader->children[n-1], leader);
@@ -50,6 +48,11 @@ void population::breed(agent* leader) {
 
     for(std::size_t i = 0; i < n; ++i)
         breed(leader->children[i]);
+
+    if (!check(root)) {
+        std::cerr << "Recombination!\n";
+        assert(false);
+    }
 }
 
 // hard stop the simulation
@@ -76,6 +79,11 @@ void population::run(int n) {
 //            diversify(root);
 
             local_search(root);
+
+            if (!check(root)) {
+                std::cerr << "Local search!\n";
+                assert(false);
+            }
             
             if (root->fitness[0] >= cur_best) ++counter;
             else counter = 0;
@@ -88,6 +96,11 @@ void population::run(int n) {
                 root->movedown_pocket();
 
                 counter = 0;
+            }
+
+            if (!check(root)) {
+                std::cerr << "Old-age!\n";
+                assert(false);
             }
             
             print();
