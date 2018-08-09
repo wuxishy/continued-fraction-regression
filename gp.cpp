@@ -81,7 +81,8 @@ void population::run(int n) {
             local_search(root);
 
             if (!check(root)) {
-                std::cerr << "Local search!\n";
+                std::cerr << i << " Local search!\n";
+		print_tree();
                 assert(false);
             }
             
@@ -100,6 +101,7 @@ void population::run(int n) {
 
             if (!check(root)) {
                 std::cerr << "Old-age!\n";
+		print_tree();
                 assert(false);
             }
             
@@ -126,7 +128,7 @@ void population::run(int n) {
 
 bool population::check(agent* a) {
     if (a->fitness[0] > a->fitness[1]) {
-        std::cerr << "Pocket! " << a->depth << std::endl;
+        std::cerr << "Pocket! " << a->depth << ' ' << a->fitness[0] << ' ' << a->fitness[1] << std::endl;
         return false;
     }
 
@@ -136,7 +138,7 @@ bool population::check(agent* a) {
         if (!check(a->children[i])) return false;
 
         if (a->fitness[0] > a->children[i]->fitness[0]) {
-            std::cerr << "Parent! " << a->depth << std::endl;
+            std::cerr << "Parent! " << a->depth << ' ' << a->fitness[0] << ' ' << a->children[i]->fitness[0] << std::endl;
             return false;
         }
     }
@@ -166,4 +168,21 @@ void population::print() {
     */
     std::cout << std::endl;
     
+}
+
+void population::print_tree() {
+    std::deque<agent*> q;
+    q.push_back(root);
+
+    while(!q.empty()) {
+	agent* a = q.front();
+	q.pop_front();
+	std::cout << a->fitness[0] << ' ';
+	if(a->depth > 1) 
+	    for (std::size_t i = 0; i < a->degree; ++i)
+                q.push_back(a->children[i]);
+
+	if(q.empty() || q.front()->depth < a->depth)
+	    std::cout << '\n';
+    }
 }

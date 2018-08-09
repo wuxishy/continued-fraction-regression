@@ -53,6 +53,7 @@ private:
     // debug stuff
     bool check(agent* a);
     void print();
+    void print_tree();
 
 public:
     population(data_store td);

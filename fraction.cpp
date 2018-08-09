@@ -10,6 +10,9 @@
 
 #include <iostream>
 
+#include <cassert>
+#include <cmath>
+
 fraction::fraction(std::size_t n) : num_var(n) {
     constant = 0;
 
@@ -32,6 +35,24 @@ double fraction::eval(const std::vector<double>& vars, std::size_t n) {
     double ret = 0;
     for(int i = n; i >= 0; --i)
         ret = repr[i].eval(vars) / (1 + ret);
+
+    if(!std::isfinite(ret)) {
+	for(double x : vars) std::cout << x << ' ';
+	std::cout << '\n';
+        show_math(std::cout);
+	std::cout << '\n';
+	show_latex(std::cout);
+	std::cout << '\n';
+	
+	ret = 0;
+	for(int i = n; i >= 0; --i) {
+	    ret = repr[i].eval(vars) / (1 + ret);
+	    std::cout << ret << ' ';
+	}
+	std::cout << '\n';
+
+	// assert(false);
+    }
 
     return constant + ret;
 }
