@@ -6,6 +6,8 @@
 
 #include "agent.hpp"
 
+#include "comp.hpp"
+
 agent::agent(std::size_t dep, std::size_t deg) : depth(dep), degree(deg) {
     this->parent = nullptr;
 
@@ -40,7 +42,7 @@ void agent::swap(agent* a, int i, agent* b, int j) {
 }
 
 bool agent::update_pocket() {
-    if(fitness[0] > fitness[1]) {
+    if(comp_greater()(fitness[0], fitness[1])) {
         agent::swap(this, 0, this, 1);
         return true;
     }
@@ -63,18 +65,17 @@ void agent::movedown_pocket() {
         }
     }
 
-    if (fitness[0] > best_fit) {
+    if (comp_greater()(fitness[0], best_fit)) {
         swap(this, 0, children[best_child], 0);
         children[best_child]->movedown_pocket();
     }
 }
 
-// TODO: there seem to be a better way
 void agent::propagate_pocket() {
     // already the leader
     if (!this->parent) return;
 
-    while(fitness[0] < this->parent->fitness[0]) {
+    while(comp_less()(fitness[0], this->parent->fitness[0])) {
         agent::swap(this, 0, this->parent, 0);
         this->parent->propagate_pocket();
         this->update_pocket();
