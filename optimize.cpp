@@ -10,7 +10,6 @@
 #include "gp.hpp"
 
 #include <map>
-#include "comp.hpp"
 
 optimize::optimize(data_store& td, fraction& f) : 
         test_data(td), frac(f) {
@@ -81,7 +80,7 @@ double optimize::nelder_mead () {
     coord cent(ndim);
     double cent_fit;
     // simplex, ordered from worst to best
-    std::multimap<double, coord, comp_greater> simplex;
+    std::multimap<double, coord, std::greater<double>> simplex;
 
     // http://www.scholarpedia.org/article/Nelder-Mead_algorithm#Initial_simplex
     double step = 2.0;
@@ -164,7 +163,7 @@ double optimize::nelder_mead () {
     double ret = eval_fit((--simplex.end())->second);
     // now buf contains the best
     frac = buf;
-    // for(func& f : frac.repr) f.find_feature();
+    //for(func& f : frac.repr) f.find_feature();
 
     return test_data.adjust_fit(frac, ret);
 }

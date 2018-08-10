@@ -49,10 +49,13 @@ double data_store::eval_fit(fraction& frac) const {
         ret += sqr(expected[i] - frac.eval(input[i]));
     }
    
-    return ret / num_entry;
+    if (std::isfinite(ret)) return ret / num_entry;
+    else return INFINITY;
 }
 
 double data_store::adjust_fit(fraction& frac, double fit) const {
+    if (!std::isfinite(fit)) return INFINITY;
+
     double factor = std::max(1.0, 1 + (frac.num_feature()-3) * 0.5);
 
     return factor * fit;

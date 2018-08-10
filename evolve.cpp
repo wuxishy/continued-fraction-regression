@@ -12,7 +12,6 @@
 
 #include <cmath>
 #include "rng.hpp"
-#include "comp.hpp"
 
 #include <cassert>
 #include <iostream> 
@@ -53,8 +52,8 @@ void population::mutate(agent* a) {
         // a rather major mutation
         // only mutate if current is too close or much worse
         // that pocket
-        if (comp_less()(a->fitness[1], 1.2 * a->fitness[0]) || 
-                comp_greater()(a->fitness[1], 2 * a->fitness[0]))
+        if (a->fitness[1] < 1.2 * a->fitness[0] || 
+                a->fitness[1] > 2 * a->fitness[0])
             feature_toggle(a->member[1]);
         // or we perturb only slightly
         else expand_feature(a->member[1]);
@@ -75,7 +74,7 @@ void population::local_search(agent* a) {
     optimize opt(test_data, a->member[1]);
     a->fitness[1] = opt.run(1);
 
-    if (comp_greater()(a->fitness[0], a->fitness[1])) {
+    if (a->fitness[0] > a->fitness[1]) {
         optimize more_opt(test_data, a->member[0]);
         a->fitness[0] = more_opt.run(1);
     }
@@ -91,7 +90,7 @@ void population::diversify(agent* a) {
 
     // kill the pocket if too close to parent
     if (a->parent) {
-        if (comp_less()(a->fitness[0], 1.01 * a->parent->fitness[0]) &&
+        if (a->fitness[0] < 1.01 * a->parent->fitness[0] &&
                 // also add a coin toss
                 rint(1, 2) == 1) {
 

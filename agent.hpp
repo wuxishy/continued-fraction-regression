@@ -13,7 +13,7 @@
 #include "fraction.hpp"
 
 class agent {
-public:
+private:
     int depth;  // the depth below this node (inclusive), leaves has depth 1
     std::size_t degree; // the degree of the tree structure, default is 3
 
@@ -30,7 +30,7 @@ public:
     void movedown_pocket();
     void propagate_pocket();
 
-//public:
+public:
     agent(std::size_t dep, std::size_t deg = 3);
     ~agent();
 
