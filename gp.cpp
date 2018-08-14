@@ -67,8 +67,13 @@ void population::run(int n) {
     double cur_best = root->fitness[0];
 
     int counter = 0;
+    int best_counter = 0;
+
     for(int i = 1; i <= n; ++i) {
-        if (stop_condition()) break;
+        if (best_counter > 300) {
+            std::cout << i << ' ' << best_counter << "\n";
+            break;
+        }
 
         breed(root);
         
@@ -104,7 +109,7 @@ void population::run(int n) {
 		print_tree();
                 assert(false);
             }
-            
+
             print();
         }
 
@@ -112,7 +117,9 @@ void population::run(int n) {
         if (cur_best < best) {
             best = cur_best;
             sol = root->member[0];
+            best_counter = 0;
         }
+        else ++best_counter;
     }
     
     std::cout.precision(5);
