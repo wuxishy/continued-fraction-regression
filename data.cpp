@@ -41,12 +41,10 @@ void data_store::read(const char* filename) {
 
 double data_store::eval_fit(fraction& frac) const { 
     double ret = 0;
-
-    auto sqr = [] (double x) -> double { return x*x; };
     
     #pragma omp parallel for reduction(+:ret)
     for(int i = 0; i < num_entry; ++i) {
-        ret += sqr(expected[i] - frac.eval(input[i]));
+        ret += std::abs(expected[i] - frac.eval(input[i]));
     }
    
     if (std::isfinite(ret)) return ret / num_entry;
