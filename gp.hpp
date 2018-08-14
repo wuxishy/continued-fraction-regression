@@ -11,12 +11,13 @@
 
 // forward declare
 class agent;
-class fraction;
 
 // include
 #include <vector>
 #include "rng.hpp"
+
 #include "data.hpp"
+#include "fraction.hpp"
 
 class population {
 private:
@@ -59,7 +60,7 @@ public:
     population(data_store td);
     ~population();
 
-    void run(int gen);
+    fraction run(int gen);
 };
 
 #endif // __GP_HPP

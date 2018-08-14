@@ -61,7 +61,7 @@ bool population::stop_condition() {
 }
 
 // run the simulation at most n iterations
-void population::run(int n) {
+fraction population::run(int n) {
     double best = root->fitness[0];
     fraction sol = root->member[0];
     double cur_best = root->fitness[0];
@@ -130,7 +130,8 @@ void population::run(int n) {
     sol.show_math(std::cout);
     std::cout << std::endl;
 
-    test_data.print_val("data.out.csv", sol);
+    // test_data.print_val("data.out.csv", sol);
+    return sol;
 }
 
 bool population::check(agent* a) {

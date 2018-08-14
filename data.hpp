@@ -27,10 +27,12 @@ struct data_store {
 
     void read(const char* filename);
 
+    data_store gen_error(fraction& frac);
+
     double eval_fit(fraction& frac) const;
     double adjust_fit(fraction& frac, double fit) const;
 
-    // debugging purpose, only works for one variable
+    // debugging purpose
     void print_val(const char* filename, fraction& frac);
 };
 

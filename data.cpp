@@ -39,6 +39,19 @@ void data_store::read(const char* filename) {
     fin.close();
 }
 
+data_store data_store::gen_error(fraction& frac) {
+    data_store next;
+    next.num_entry = this->num_entry;
+    next.num_var = this->num_var;
+    next.input = this->input;
+
+    next.expected = vector<double>(0);
+    for (int i = 0; i < num_entry; ++i)
+        next.expected.push_back(expected[i] - frac.eval(input[i]));
+
+    return next;
+}
+
 double data_store::eval_fit(fraction& frac) const { 
     double ret = 0;
     
