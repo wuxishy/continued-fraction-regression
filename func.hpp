@@ -25,6 +25,7 @@ public:
     static constexpr double eps = 0.001;
 
     func(std::size_t n = 1);
+    bool correct();
 
     double eval(const std::vector<double>& vars);
 

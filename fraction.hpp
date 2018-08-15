@@ -24,6 +24,7 @@ private:
 
 public:
     fraction(std::size_t n=1);
+    bool correct();
 
     double eval(const std::vector<double>& vars);
     // evaluate to nth level

@@ -71,12 +71,9 @@ void population::run(int n) {
         if (stop_condition()) break;
 
         breed(root);
+        correct(root);
         
-//        if (i % 20 == 0)
-//            simplify(root);
-
         if (i % 30 == 0) {
-//            diversify(root);
 
             local_search(root);
 
@@ -92,6 +89,7 @@ void population::run(int n) {
             // kill if the best solution got stuck
             if (counter > 2) {
                 root->member[0] = fraction(test_data.num_var);
+                root->member[0].correct();
                 eval_fit(root, 0);
 
                 root->movedown_pocket();

@@ -30,6 +30,22 @@ void func::find_feature() {
     }
 }
 
+bool func::correct() {
+    bool on = false;
+    for (bool b : feature) on |= b;
+
+    if (!on) {
+        randint rint;
+        int ind = rint(0, num_var - 1);
+        coeff[ind] = (rint(0, 1) ? 1 : -1) * rint(1, 3);
+        feature[ind] = true;
+
+        return true;
+    }
+
+    return false;
+}
+
 double func::eval(const std::vector<double>& vars) {
     double ret = 0;
 

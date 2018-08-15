@@ -23,6 +23,13 @@ fraction::fraction(std::size_t n) : num_var(n) {
     for (func& x : repr) x = func(num_var);
 }
 
+bool fraction::correct() {
+    bool ret = false;
+    for (func& f : repr) ret = f.correct();
+
+    return ret;
+}
+
 double fraction::eval(const std::vector<double>& vars) {
     return eval(vars, repr.size() - 1);
 }

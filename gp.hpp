@@ -34,8 +34,7 @@ private:
     void recombine(agent* a, agent* b);
     void mutate(agent* a);
     void local_search(agent* a);
-    void diversify(agent* a);
-    void simplify(agent* a);
+    void correct(agent* a);
 
     // recomb_op.cpp
     void variable_intersect(agent* a, agent* b);
