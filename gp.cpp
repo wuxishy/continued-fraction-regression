@@ -116,7 +116,7 @@ void population::run(int n) {
     }
     
     std::cout.precision(5);
-    std::cout << test_data.eval_fit(sol) << "\n";
+    std::cout << best << ' ' << test_data.eval_fit(sol) << "\n";
     std::cout.precision(2);
     sol.show_latex(std::cout);
     std::cout << std::endl;

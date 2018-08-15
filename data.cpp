@@ -53,6 +53,27 @@ double data_store::eval_fit(fraction& frac) const {
     else return INFINITY;
 }
 
+double data_store::combine_fit(fraction& frac) const { 
+    double ret = 0;
+
+    auto sqr = [] (double x) -> double { return x*x; };
+    
+    size_t depth = frac.repr.size();
+    for(size_t d = 1; d < depth; ++d) {
+        #pragma omp parallel for reduction(+:ret)
+        for(int i = 0; i < num_entry; ++i) {
+            double tmp = sqr(expected[i] - frac.eval(input[i], d));
+            // the final fit is given higher weight
+            if (d+1 == depth)
+                ret += tmp * 2 / depth;
+            else ret += tmp / depth;
+        }
+    }
+   
+    if (std::isfinite(ret)) return ret / num_entry;
+    else return INFINITY;
+}
+
 double data_store::adjust_fit(fraction& frac, double fit) const {
     if (!std::isfinite(fit)) return INFINITY;
 

@@ -18,13 +18,13 @@
 
 void population::eval_fit(agent* a, int i) {
     a->fitness[i] = test_data.adjust_fit(a->member[i], 
-            test_data.eval_fit(a->member[i]));
+            test_data.combine_fit(a->member[i]));
 }
 
 void population::recombine(agent* a, agent* b) {
     //double tmp = a->fitness[1];
 
-    switch(rint(1, 5)) {
+    switch(rint(1, 3)) {
         case 1:
             exchange_branch(a, b);
             break;

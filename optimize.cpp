@@ -43,7 +43,7 @@ double optimize::eval_fit(const vector<double>& vec) {
         buf.repr[pos.first].coeff[pos.second] = vec[i];
     }
 
-    return test_data.eval_fit(buf);
+    return test_data.combine_fit(buf);
 }
 
 // simplified nelder mead for speed
