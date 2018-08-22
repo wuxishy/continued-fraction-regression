@@ -11,6 +11,10 @@
 
 #include <map>
 
+#include <cmath>
+
+#include <iostream>
+
 optimize::optimize(data_store& td, fraction& f) : 
         test_data(td), frac(f) {
     buf = frac; 
@@ -44,6 +48,11 @@ double optimize::eval_fit(const vector<double>& vec) {
     }
 
     return test_data.eval_fit(buf);
+    /*
+    using std::sin;
+    using std::pow;
+    return pow(sin(3*M_PI*vec[0]),2)+pow(vec[0]-1, 2)*(1+pow(sin(3*M_PI*vec[1]),2))+pow(vec[1]-1, 2)*(1+pow(sin(2*M_PI*vec[1]),2));
+    */
 }
 
 // simplified nelder mead for speed
@@ -83,7 +92,7 @@ double optimize::nelder_mead () {
     std::multimap<double, coord, std::greater<double>> simplex;
 
     // http://www.scholarpedia.org/article/Nelder-Mead_algorithm#Initial_simplex
-    double step = 2.0;
+    double step = 0.5;
     coord tmp(ndim);
     tmp[0] = frac.constant;
     for(int i = 1; i < ndim; ++i) {
@@ -98,13 +107,30 @@ double optimize::nelder_mead () {
         tmp[i] -= step;
     }
 
-    for(int i = 0; i < ndim; ++i) cent[i] = tmp[i] + step/(1+ndim);
+    for (int i = 0; i < ndim; ++i) {
+        cent[i] = 0;
+        for (auto it = ++simplex.begin(); it != simplex.end(); ++it)
+            cent[i] += it->second[i] / ndim;
+    }
     cent_fit = eval_fit(cent);
 
     // either converge, or reach max number of iterations
     int iter = 0;
-    while(simplex.begin()->first - (--simplex.end())->first > 0.1 
-            && iter < 1000) {
+    while(simplex.begin()->first - (--simplex.end())->first > 1e-3
+            && iter < 5000 ) {
+
+        for(auto it = simplex.begin(); it != simplex.end(); ++it) {
+            std::cerr << it->first << '\n';
+            for(int i = 0; i < ndim; ++i)
+                std::cerr << it->second[i] << ' ';
+            std::cerr << '\n';
+        }
+        std::cerr << cent_fit << '\n';
+        for(int i = 0; i < ndim; ++i)
+            std::cerr << cent[i] << ' ';
+        std::cerr << '\n';
+        std::cerr << '\n';
+
         coord& vw = simplex.begin()->second;
         double vw_fit = simplex.begin()->first;
         coord& vsw = (++simplex.begin())->second;
@@ -149,21 +175,33 @@ double optimize::nelder_mead () {
         }
 
         // replace the worst
-        for (int i = 0; i < ndim; ++i) {
-            cent[i] += (vtmp[i] - vw[i]) / (1+ndim);
-        }
-        cent_fit = eval_fit(cent);
-
         simplex.erase(simplex.begin());
         simplex.insert({eval_fit(vtmp), vtmp});
 
+        // recompute the centroid
+        for (int i = 0; i < ndim; ++i) {
+            cent[i] = 0;
+            for (auto it = ++simplex.begin(); it != simplex.end(); ++it)
+                cent[i] += it->second[i] / ndim;
+        }
+        cent_fit = eval_fit(cent);
+
         ++iter;
     }
+    std::cerr << iter << '\n';
+    //if (iter >= 10000) std::cerr << "RICH!!!\n";
 
     double ret = eval_fit((--simplex.end())->second);
     // now buf contains the best
     frac = buf;
     //for(func& f : frac.repr) f.find_feature();
+      
+    /*
+    std::cout << (--simplex.end())->first << '\n';
+    for(int i = 0; i < ndim; ++i)
+        std::cout << (--simplex.end())->second[i] << ' ';
+    std::cout << '\n';
+    */
 
     return test_data.adjust_fit(frac, ret);
 }
