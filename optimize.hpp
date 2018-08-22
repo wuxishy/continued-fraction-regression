@@ -9,10 +9,10 @@
 
 // forward declare
 class data_store;
+class evaluator;
+class fraction;
 
 // include
-#include "fraction.hpp"
-
 #include <vector>
 using std::vector;
 using std::size_t;
@@ -22,14 +22,14 @@ private:
     const data_store& test_data;
 
     fraction& frac;
-    fraction buf;
 
     using pii = std::pair<int, int>;
     int ndim;
     vector<pii> var_map;
 
-    double eval_fit (const vector<double>& vec);
-    double nelder_mead ();
+    double eval_fit (const vector<double>& vec, fraction& buf,
+            const evaluator& e) const;
+    double nelder_mead (fraction& frac, const evaluator& e) const;
 
 public:
     optimize(data_store& td, fraction& f);

@@ -8,6 +8,7 @@
 
 #include "optimize.hpp"
 
+#include "fraction.hpp"
 #include "eval.hpp" 
 
 #include <map>
@@ -18,8 +19,6 @@
 
 optimize::optimize(data_store& td, fraction& f) : 
         test_data(td), frac(f) {
-    buf = frac; 
-
     ndim = 1;
     var_map.push_back({0, 0}); //for convenience
     for(size_t i = 0; i < frac.repr.size(); ++i) {
@@ -33,22 +32,22 @@ optimize::optimize(data_store& td, fraction& f) :
 }
 
 double optimize::run (int type) {
-    switch(type) {
-        case 1:
-            return nelder_mead();
-        default:
-            return 0;
-    }
+    fraction buf = frac;
+    evaluator e(test_data, 50);
+
+    nelder_mead(buf, e);
+    frac = buf;
+
+    return e.adjust_fit(frac, e.eval_fit_full(frac));
 }
 
-double optimize::eval_fit(const vector<double>& vec) {
+double optimize::eval_fit(const vector<double>& vec, fraction& buf, 
+        const evaluator& e) const {
     buf.constant = vec[0];
     for(int i = 1; i < ndim; ++i) {
-        pii& pos = var_map[i];
+        const pii& pos = var_map[i];
         buf.repr[pos.first].coeff[pos.second] = vec[i];
     }
-    evaluator e(test_data);
-
     return e.eval_fit(buf);
     /*
     using std::sin;
@@ -58,7 +57,7 @@ double optimize::eval_fit(const vector<double>& vec) {
 }
 
 // simplified nelder mead for speed
-double optimize::nelder_mead () {
+double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
     using coord = vector<double>;
     
     // simplex operations
@@ -98,14 +97,14 @@ double optimize::nelder_mead () {
     coord tmp(ndim);
     tmp[0] = frac.constant;
     for(int i = 1; i < ndim; ++i) {
-        pii& pos = var_map[i];
+        const pii& pos = var_map[i];
         tmp[i] = frac.repr[pos.first].coeff[pos.second];
     }
-    simplex.insert({eval_fit(tmp), tmp});
+    simplex.insert({eval_fit(tmp, buf, e), tmp});
 
     for(int i = 0; i < ndim; ++i) {
         tmp[i] += step;
-        simplex.insert({eval_fit(tmp), tmp});
+        simplex.insert({eval_fit(tmp, buf, e), tmp});
         tmp[i] -= step;
     }
 
@@ -114,7 +113,7 @@ double optimize::nelder_mead () {
         for (auto it = ++simplex.begin(); it != simplex.end(); ++it)
             cent[i] += it->second[i] / ndim;
     }
-    cent_fit = eval_fit(cent);
+    cent_fit = eval_fit(cent, buf, e);
 
     // either converge, or reach max number of iterations
     int iter = 0;
@@ -140,12 +139,12 @@ double optimize::nelder_mead () {
         coord& vb = (--simplex.end())->second;
 
         coord vr = refl(cent, vw);
-        double vr_fit = eval_fit(vr);
+        double vr_fit = eval_fit(vr, buf, e);
         coord ve = expa(cent, vw);
 
         coord vtmp;
         if (vr_fit < vw_fit) {
-            if(eval_fit(ve) < cent_fit) {
+            if(eval_fit(ve, buf, e) < cent_fit) {
                 if(vr_fit < cent_fit)
                     vtmp = contr(vr, ve);
                 else 
@@ -162,13 +161,13 @@ double optimize::nelder_mead () {
             else
                 vtmp = cent;
 
-            if (eval_fit(contr(refl(cent, ve), contr(vtmp, cent))) 
+            if (eval_fit(contr(refl(cent, ve), contr(vtmp, cent)), buf, e) 
                     < cent_fit)
                 vtmp = refl(cent, vr);
             else
                 vtmp = cent;
 
-            if (eval_fit(vtmp) < cent_fit)
+            if (eval_fit(vtmp, buf, e) < cent_fit)
                 vtmp = vr;
             else
                 vtmp = contr(cent, vw);
@@ -178,7 +177,7 @@ double optimize::nelder_mead () {
 
         // replace the worst
         simplex.erase(simplex.begin());
-        simplex.insert({eval_fit(vtmp), vtmp});
+        simplex.insert({eval_fit(vtmp, buf, e), vtmp});
 
         // recompute the centroid
         for (int i = 0; i < ndim; ++i) {
@@ -186,16 +185,15 @@ double optimize::nelder_mead () {
             for (auto it = ++simplex.begin(); it != simplex.end(); ++it)
                 cent[i] += it->second[i] / ndim;
         }
-        cent_fit = eval_fit(cent);
+        cent_fit = eval_fit(cent, buf, e);
 
         ++iter;
     }
     std::cerr << iter << '\n';
     //if (iter >= 10000) std::cerr << "RICH!!!\n";
 
-    double ret = eval_fit((--simplex.end())->second);
+    double ret = eval_fit((--simplex.end())->second, buf, e);
     // now buf contains the best
-    frac = buf;
     //for(func& f : frac.repr) f.find_feature();
       
     /*
@@ -205,6 +203,5 @@ double optimize::nelder_mead () {
     std::cout << '\n';
     */
     
-    evaluator e(test_data);
-    return e.adjust_fit(frac, ret);
+    return e.adjust_fit(buf, ret);
 }
