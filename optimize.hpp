@@ -8,9 +8,9 @@
 #define __OPTIMIZE_HPP__
 
 // forward declare
+class data_store;
 
 // include
-#include "data.hpp"
 #include "fraction.hpp"
 
 #include <vector>
@@ -20,6 +20,7 @@ using std::size_t;
 class optimize {
 private:
     const data_store& test_data;
+
     fraction& frac;
     fraction buf;
 

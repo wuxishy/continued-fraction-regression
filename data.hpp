@@ -11,7 +11,6 @@
 #define __DATA_STORE_HPP
 
 // forward declare
-class fraction;
 #include <iosfwd>
 
 // include
@@ -26,12 +25,6 @@ struct data_store {
     vector<vector<double>> input;
 
     void read(const char* filename);
-
-    double eval_fit(fraction& frac) const;
-    double adjust_fit(fraction& frac, double fit) const;
-
-    // debugging purpose, only works for one variable
-    void print_val(const char* filename, fraction& frac);
 };
 
 #endif // __DATA_STORE_HPP

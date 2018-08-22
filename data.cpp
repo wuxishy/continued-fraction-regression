@@ -5,12 +5,9 @@
  ******************************/
 
 #include "data.hpp"
-#include "fraction.hpp"
 
 #include <fstream>
 #include <string>
-
-#include <cmath>
 
 #include <cassert>
 
@@ -36,34 +33,4 @@ void data_store::read(const char* filename) {
     }
 
     fin.close();
-}
-
-double data_store::eval_fit(fraction& frac) const { 
-    double ret = 0;
-
-    auto sqr = [] (double x) -> double { return x*x; };
-    
-    for(int i = 0; i < num_entry; ++i) {
-        ret += sqr(expected[i] - frac.eval(input[i]));
-    }
-   
-    if (std::isfinite(ret)) return ret / num_entry;
-    else return INFINITY;
-}
-
-double data_store::adjust_fit(fraction& frac, double fit) const {
-    if (!std::isfinite(fit)) return INFINITY;
-
-    double factor = std::max(1.0, 1 + (frac.num_feature()-3) * 0.5);
-
-    return factor * fit;
-}
-
-void data_store::print_val(const char* filename, fraction& frac) {
-    std::ofstream fout(filename);
-    
-    for(int i = 0; i < num_entry; ++i)
-        fout << expected[i] << ',' << frac.eval(input[i]) << '\n';
-
-    fout.close();
 }

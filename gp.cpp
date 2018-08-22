@@ -12,6 +12,8 @@
 #include "agent.hpp"
 #include "optimize.hpp"
 
+#include "eval.hpp"
+
 #include <cassert>
 #include <iostream>
 #include <deque>
@@ -75,7 +77,7 @@ void population::run(int n) {
 //        if (i % 20 == 0)
 //            simplify(root);
 
-        if (i % 30 == 0) {
+        if (i % 1 == 0) {
 //            diversify(root);
 
             local_search(root);
@@ -90,7 +92,7 @@ void population::run(int n) {
             else counter = 0;
 
             // kill if the best solution got stuck
-            if (counter > 2) {
+            if (counter > 10) {
                 root->member[0] = fraction(test_data.num_var);
                 eval_fit(root, 0);
 
@@ -115,15 +117,18 @@ void population::run(int n) {
         }
     }
     
+    evaluator e(test_data);
+    
     std::cout.precision(5);
-    std::cout << test_data.eval_fit(sol) << "\n";
+    std::cout << e.eval_fit(sol) << "\n";
+    std::cout << sol.num_feature() << ' ' << best << "\n";
     std::cout.precision(2);
     sol.show_latex(std::cout);
     std::cout << std::endl;
     sol.show_math(std::cout);
     std::cout << std::endl;
 
-    test_data.print_val("data.out.csv", sol);
+    e.print_val("data.out.csv", sol);
 }
 
 bool population::check(agent* a) {

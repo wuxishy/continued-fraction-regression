@@ -7,7 +7,8 @@
 // performing local search
 
 #include "optimize.hpp"
-#include "gp.hpp"
+
+#include "eval.hpp" 
 
 #include <map>
 
@@ -46,8 +47,9 @@ double optimize::eval_fit(const vector<double>& vec) {
         pii& pos = var_map[i];
         buf.repr[pos.first].coeff[pos.second] = vec[i];
     }
+    evaluator e(test_data);
 
-    return test_data.eval_fit(buf);
+    return e.eval_fit(buf);
     /*
     using std::sin;
     using std::pow;
@@ -202,6 +204,7 @@ double optimize::nelder_mead () {
         std::cout << (--simplex.end())->second[i] << ' ';
     std::cout << '\n';
     */
-
-    return test_data.adjust_fit(frac, ret);
+    
+    evaluator e(test_data);
+    return e.adjust_fit(frac, ret);
 }

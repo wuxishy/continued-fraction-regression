@@ -10,6 +10,8 @@
 #include "agent.hpp"
 #include "optimize.hpp"
 
+#include "eval.hpp"
+
 #include <cmath>
 #include "rng.hpp"
 
@@ -17,8 +19,8 @@
 #include <iostream> 
 
 void population::eval_fit(agent* a, int i) {
-    a->fitness[i] = test_data.adjust_fit(a->member[i], 
-            test_data.eval_fit(a->member[i]));
+    evaluator e(test_data);
+    a->fitness[i] = e.adjust_fit(a->member[i], e.eval_fit(a->member[i]));
 }
 
 void population::recombine(agent* a, agent* b) {
@@ -48,7 +50,7 @@ void population::recombine(agent* a, agent* b) {
 }
 
 void population::mutate(agent* a) {
-    if(rint(1, 5) == 1) {
+    if(rint(1, 2) == 1) {
         // a rather major mutation
         // only mutate if current is too close or much worse
         // that pocket
