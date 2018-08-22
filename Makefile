@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -g -O2 -fopenmp -Wall -Wextra -pedantic
+CXXFLAGS = -g -O2 -Wall -Wextra -pedantic
 
 LIST = main data gp agent fraction func init evolve \
        recomb_op mutate_op optimize
