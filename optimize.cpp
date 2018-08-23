@@ -15,6 +15,10 @@
 
 #include <cmath>
 
+#include <thread>
+#include <atomic>
+#include <mutex>
+
 #include <iostream>
 
 optimize::optimize(data_store& td, fraction& f) : 
@@ -32,13 +36,41 @@ optimize::optimize(data_store& td, fraction& f) :
 }
 
 double optimize::run (int type) {
-    fraction buf = frac;
-    evaluator e(test_data, 50);
+    std::mutex frac_mutex;
 
-    nelder_mead(buf, e);
-    frac = buf;
+    std::atomic<int> counter(0);
 
-    return e.adjust_fit(frac, e.eval_fit_full(frac));
+    // assume that objective function is always nonnegative
+    double best = -1;
+    
+    auto run_thread = [&, this] () {
+        while (true) {
+            if (++counter >= 16) return;
+
+            fraction buf = frac;
+            evaluator e(test_data, 200);
+
+            nelder_mead(buf, e);
+
+            double tmp = e.adjust_fit(buf, e.eval_fit_full(buf));
+            // TODO: use atomic instead for better performance
+            frac_mutex.lock();
+            if (best < 0 || tmp < best) {
+                best = tmp;
+                frac = buf;
+            }
+            frac_mutex.unlock();
+        }
+    };
+    
+    int num_thread = std::thread::hardware_concurrency();
+    vector<std::thread> thread_pool;
+    for (int i = 0; i < num_thread; ++i)
+        thread_pool.push_back(std::thread(run_thread));
+    for (int i = 0; i < num_thread; ++i)
+        thread_pool[i].join();
+
+    return best;
 }
 
 double optimize::eval_fit(const vector<double>& vec, fraction& buf, 

@@ -1,5 +1,6 @@
 CXX = g++
 CXXFLAGS = -g -O2 -Wall -Wextra -pedantic
+LDFLAGS = -pthread
 
 LIST = main data eval gp agent fraction func init \
        evolve recomb_op mutate_op optimize
@@ -13,7 +14,7 @@ bin/%.o : %.cpp
 	$(CXX) -c $< $(CXXFLAGS) -o $@
 
 main: $(OBJ) 
-	$(CXX) $^ $(CXXFLAGS) -o bin/main
+	$(CXX) $^ $(CXXFLAGS) $(LDFLAGS) -o bin/main
 
 clean:
 	rm -f bin/*
