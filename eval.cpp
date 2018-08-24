@@ -17,46 +17,52 @@
 #include <cassert>
 
 evaluator::evaluator(const data_store& td) : test_data(td) {
-    arr = vector<int>();
+    selection = std::unordered_set<int>();
 }
 
 evaluator::evaluator(const data_store& td, int num) : test_data(td) {
-    arr = vector<int>();
-    
+    selection = std::unordered_set<int>();
+   
+    // if too many being selected, might just as choose the whole
+    if (num *2 >= test_data.num_entry) return;
+
     randint rint;
-    for (int i = 0; i < num; ++i) {
-        arr.push_back(rint(0, test_data.num_entry-1));
+    int iter = 0; // guard against super bad RNG
+    while (num > 0 && iter++ < test_data.num_entry) {
+        auto result = selection.insert(rint(0, test_data.num_entry-1));
+        if (result.second) --num;
     }
 }
 
+static inline double eval_pt(const data_store& td, fraction& frac, int i) {
+    auto sqr = [] (double x) -> double { return x*x; };
+    return sqr(td.expected[i] - frac.eval(td.input[i])) / td.num_entry;
+}
+
+static inline double process(double val) {
+    return std::isfinite(val) ? val : INFINITY;
+}
+
 double evaluator::eval_fit(fraction& frac) const { 
-    if (arr.empty()) return eval_fit_full(frac);
+    if (selection.empty()) return eval_fit_full(frac);
     
     double ret = 0;
-
-    auto sqr = [] (double x) -> double { return x*x; };
     
-    for(int i : arr) {
-        ret += sqr(test_data.expected[i] - 
-                frac.eval(test_data.input[i]));
+    for(int i : selection) {
+        ret += eval_pt(test_data, frac, i);
     }
    
-    if (std::isfinite(ret)) return ret / test_data.num_entry;
-    else return INFINITY;
+    return process(ret);
 }
 
 double evaluator::eval_fit_full(fraction& frac) const { 
     double ret = 0;
 
-    auto sqr = [] (double x) -> double { return x*x; };
-    
     for(int i = 0; i < test_data.num_entry; ++i) {
-        ret += sqr(test_data.expected[i] - 
-                frac.eval(test_data.input[i]));
+        ret += eval_pt(test_data, frac, i);
     }
    
-    if (std::isfinite(ret)) return ret / test_data.num_entry;
-    else return INFINITY;
+    return process(ret);
 }
 
 double evaluator::adjust_fit(fraction& frac, double fit) const {

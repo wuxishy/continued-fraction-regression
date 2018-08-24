@@ -10,14 +10,12 @@
 class data_store;
 class fraction;
 
-#include <vector>
-using std::vector;
-using std::size_t;
+#include <unordered_set>
 
 class evaluator {
 private:
     const data_store& test_data;
-    vector<int> arr;
+    std::unordered_set<int> selection;
 
 public:
     evaluator(const data_store& td);
