@@ -36,6 +36,9 @@ optimize::optimize(data_store& td, fraction& f) :
 }
 
 double optimize::run (int type) {
+    int num_thread = std::thread::hardware_concurrency();
+    vector<std::thread> thread_pool;
+
     std::mutex frac_mutex;
 
     std::atomic<int> counter(0);
@@ -45,7 +48,7 @@ double optimize::run (int type) {
     
     auto run_thread = [&, this] () {
         while (true) {
-            if (++counter >= 16) return;
+            if (++counter >= std::max(8, num_thread)) return;
 
             fraction buf = frac;
             evaluator e(test_data, 200);
@@ -63,8 +66,6 @@ double optimize::run (int type) {
         }
     };
     
-    int num_thread = std::thread::hardware_concurrency();
-    vector<std::thread> thread_pool;
     for (int i = 0; i < num_thread; ++i)
         thread_pool.push_back(std::thread(run_thread));
     for (int i = 0; i < num_thread; ++i)
@@ -147,11 +148,13 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
     }
     cent_fit = eval_fit(cent, buf, e);
 
-    // either converge, or reach max number of iterations
+    // either converge, or reach max number of iterations, or stagnate for too long
     int iter = 0;
+    // stagnation is when the new vertex is still the worst
+    int stag = 0;
     while(simplex.begin()->first - (--simplex.end())->first > 1e-3
-            && iter < 5000 ) {
-
+            && iter < 1000 && stag < 250) {
+        /*
         for(auto it = simplex.begin(); it != simplex.end(); ++it) {
             std::cerr << it->first << '\n';
             for(int i = 0; i < ndim; ++i)
@@ -163,7 +166,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
             std::cerr << cent[i] << ' ';
         std::cerr << '\n';
         std::cerr << '\n';
-
+        */
         coord& vw = simplex.begin()->second;
         double vw_fit = simplex.begin()->first;
         coord& vsw = (++simplex.begin())->second;
@@ -209,6 +212,11 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
 
         // replace the worst
         simplex.erase(simplex.begin());
+        
+        double vtmp_fit = eval_fit(vtmp, buf, e);
+        if (vtmp_fit >= simplex.begin()->first) ++stag;
+        else stag = 0;
+
         simplex.insert({eval_fit(vtmp, buf, e), vtmp});
 
         // recompute the centroid
@@ -221,7 +229,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
 
         ++iter;
     }
-    std::cerr << iter << '\n';
+    //std::cerr << iter << '\n';
     //if (iter >= 10000) std::cerr << "RICH!!!\n";
 
     double ret = eval_fit((--simplex.end())->second, buf, e);
