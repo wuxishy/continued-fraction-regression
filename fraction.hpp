@@ -14,23 +14,27 @@
 
 // include
 #include <vector>
+using std::vector;
+using std::size_t;
 
 #include "func.hpp"
 
-
 class fraction {
 private:
-    std::size_t num_var;
+    size_t num_var;
 
 public:
+    double constant;
+
+    size_t depth;
+    vector<bool> const_feature;
+    vector<func> repr;
+    
     fraction(std::size_t n=1);
 
-    double eval(const std::vector<double>& vars);
+    double eval(const vector<double>& vars);
     // evaluate to nth level
-    double eval(const std::vector<double>& vars, std::size_t n);
-    
-    double constant;
-    std::vector<func> repr;
+    double eval(const vector<double>& vars, size_t n);
 
     int num_feature();
     // debug output

@@ -25,12 +25,18 @@ optimize::optimize(data_store& td, fraction& f) :
         test_data(td), frac(f) {
     ndim = 1;
     var_map.push_back({0, 0}); //for convenience
-    for(size_t i = 0; i < frac.repr.size(); ++i) {
+    for(size_t i = 0; i < frac.depth; ++i) {
+        bool on = false;
         for(size_t j = 0; j < frac.repr[i].coeff.size(); ++j) {
             if(frac.repr[i].feature[j]) {
                 ++ndim;
                 var_map.push_back({i, j});
+                on = true;
             }
+        }
+        if (!on) {
+            ++ndim;
+            var_map.push_back({i, -1});
         }
     }
 }
@@ -79,7 +85,10 @@ double optimize::eval_fit(const vector<double>& vec, fraction& buf,
     buf.constant = vec[0];
     for(int i = 1; i < ndim; ++i) {
         const pii& pos = var_map[i];
-        buf.repr[pos.first].coeff[pos.second] = vec[i];
+        if (pos.second >= 0)
+            buf.repr[pos.first].coeff[pos.second] = vec[i];
+        else
+            buf.repr[pos.first].alt_constant = vec[i];
     }
     return e.eval_fit(buf);
     /*
@@ -131,7 +140,10 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
     tmp[0] = frac.constant;
     for(int i = 1; i < ndim; ++i) {
         const pii& pos = var_map[i];
-        tmp[i] = frac.repr[pos.first].coeff[pos.second];
+        if (pos.second >= 0)
+            tmp[i] = frac.repr[pos.first].coeff[pos.second];
+        else
+            tmp[i] = frac.repr[pos.first].alt_constant;
     }
     simplex.insert({eval_fit(tmp, buf, e), tmp});
 

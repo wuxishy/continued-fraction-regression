@@ -12,21 +12,26 @@
 
 // include
 #include <vector>
+using std::vector;
+using std::size_t;
 
 class func {
-private:
-    std::size_t num_var;
-    std::vector<bool> feature;
-    std::vector<double> coeff;
+public:
+//private:
+    size_t num_var;
+    vector<bool> feature;
+    vector<double> coeff;
+
+    double alt_constant = 0;
 
     void find_feature();
 
-public:
+//public:
     static constexpr double eps = 0.001;
 
     func(std::size_t n = 1);
 
-    double eval(const std::vector<double>& vars);
+    double eval(const vector<double>& vars);
 
     // debug output
     void show(std::ostream& out);
