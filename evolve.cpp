@@ -24,8 +24,6 @@ void population::eval_fit(agent* a, int i) {
 }
 
 void population::recombine(agent* a, agent* b) {
-    //double tmp = a->fitness[1];
-
     switch(rint(1, 2)) {
         case 1:
             variable_intersect(a, b);
@@ -38,12 +36,7 @@ void population::recombine(agent* a, agent* b) {
     }
 
     eval_fit(a, 1);
-/*
-    if (a->fitness[1] < tmp || a->fitness[1] < b->fitness[1])
-        std::cerr << "Rich!" << std::endl;
-    else
-        std::cerr << "Poor!" << std::endl;
-*/
+
     a->update_pocket();
     a->propagate_pocket();
 }

@@ -16,7 +16,7 @@
 fraction::fraction(size_t n) : num_var(n) {
     randint rint;
 
-    depth = 3;
+    depth = 5;
     const_feature = vector<bool>(depth);
     repr = vector<func>(depth);
 

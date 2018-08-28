@@ -18,6 +18,9 @@ class fraction;
 #include "rng.hpp"
 #include "data.hpp"
 
+// used to catch Control-C and gracefully stop
+extern volatile bool STOP;
+
 class population {
 private:
     data_store test_data;

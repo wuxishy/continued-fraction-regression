@@ -59,6 +59,8 @@ void population::breed(agent* leader) {
 
 // hard stop the simulation
 bool population::stop_condition() {
+    if (STOP) return true;
+
     return false;
 }
 
@@ -67,6 +69,8 @@ void population::run(int n) {
     double best = root->fitness[0];
     fraction sol = root->member[0];
     double cur_best = root->fitness[0];
+
+//    simplify(root);
 
     int counter = 0;
     for(int i = 1; i <= n; ++i) {
@@ -92,7 +96,7 @@ void population::run(int n) {
             else counter = 0;
 
             // kill if the best solution got stuck
-            if (counter > 10) {
+            if (counter > 5) {
                 root->member[0] = fraction(test_data.num_var);
                 eval_fit(root, 0);
 
@@ -122,7 +126,7 @@ void population::run(int n) {
     std::cout.precision(5);
     std::cout << e.eval_fit(sol) << "\n";
     std::cout << sol.num_feature() << ' ' << best << "\n";
-    std::cout.precision(2);
+    std::cout.precision(3);
     sol.show_latex(std::cout);
     std::cout << std::endl;
     sol.show_math(std::cout);
