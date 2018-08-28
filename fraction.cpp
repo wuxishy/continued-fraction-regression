@@ -17,14 +17,28 @@ fraction::fraction(size_t n) : num_var(n) {
     randint rint;
 
     depth = 5;
-    const_feature = vector<bool>(depth);
-    repr = vector<func>(depth);
 
     constant = 0;
+    const_feature = vector<bool>(depth);
+
+    feature = vector<bool>(num_var);
+    repr = vector<func>(depth);
+
+    for (size_t i = 0; i < num_var; ++i) 
+        feature[i] = (rint(0, 4) ? false : true);
 
     for(size_t i = 0; i < depth; ++i) {
-        repr[i] = func(num_var);
         const_feature[i] = rint(0, 1);
+
+        repr[i] = func(num_var);
+        for (size_t j = 0; j < num_var; ++j) {
+            if (!feature[j]) continue;
+
+            repr[i].coeff[j] = rint(-3, 3);
+            if (repr[i].coeff[j] != 0) 
+                repr[i].feature[j] = true; 
+        }
+        repr[i].alt_constant = rint(-3, 3);
     }
 }
 

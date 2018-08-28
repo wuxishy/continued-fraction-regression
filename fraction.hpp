@@ -28,6 +28,7 @@ public:
 
     size_t depth;
     vector<bool> const_feature;
+    vector<bool> feature;
     vector<func> repr;
     
     fraction(std::size_t n=1);

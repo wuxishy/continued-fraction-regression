@@ -11,15 +11,7 @@
 
 func::func(std::size_t n) : num_var(n) {
     coeff = std::vector<double> (n);
-    feature = std::vector<bool> (n, true);
-
-    randint rint;
-    for(std::size_t i = 0; i < n; ++i) {
-        coeff[i] = rint(0, 1)*2;
-        if (coeff[i] == 0) feature[i] = false; 
-    }
-
-    alt_constant = 1;
+    feature = std::vector<bool> (n);
 }
 
 void func::find_feature() {

@@ -47,14 +47,15 @@ double optimize::run (int type) {
 
     std::mutex frac_mutex;
 
-    std::atomic<int> counter(0);
+    int c = std::max(8, num_thread);
+    std::atomic<int> counter(c);
 
     // assume that objective function is always nonnegative
     double best = -1;
     
     auto run_thread = [&, this] () {
         while (true) {
-            if (++counter >= std::max(8, num_thread)) return;
+            if (--counter < 0) return;
 
             fraction buf = frac;
             evaluator e(test_data, 200);
@@ -62,7 +63,6 @@ double optimize::run (int type) {
             nelder_mead(buf, e);
 
             double tmp = e.adjust_fit(buf, e.eval_fit_full(buf));
-            // TODO: use atomic instead for better performance
             frac_mutex.lock();
             if (best < 0 || tmp < best) {
                 best = tmp;
@@ -91,11 +91,6 @@ double optimize::eval_fit(const vector<double>& vec, fraction& buf,
             buf.repr[pos.first].alt_constant = vec[i];
     }
     return e.eval_fit(buf);
-    /*
-    using std::sin;
-    using std::pow;
-    return pow(sin(3*M_PI*vec[0]),2)+pow(vec[0]-1, 2)*(1+pow(sin(3*M_PI*vec[1]),2))+pow(vec[1]-1, 2)*(1+pow(sin(2*M_PI*vec[1]),2));
-    */
 }
 
 // simplified nelder mead for speed
@@ -165,7 +160,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
     // stagnation is when the new vertex is still the worst
     int stag = 0;
     while(simplex.begin()->first - (--simplex.end())->first > 1e-3
-            && iter < 1000 && stag < 250) {
+            && iter < 2500 && stag < 250) {
         /*
         for(auto it = simplex.begin(); it != simplex.end(); ++it) {
             std::cerr << it->first << '\n';
@@ -242,7 +237,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
         ++iter;
     }
     //std::cerr << iter << '\n';
-    //if (iter >= 10000) std::cerr << "RICH!!!\n";
+    //if (iter >= 3000) std::cerr << "RICH!!!\n";
 
     double ret = eval_fit((--simplex.end())->second, buf, e);
     // now buf contains the best

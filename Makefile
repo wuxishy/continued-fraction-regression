@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -g -O2 -Wall -Wextra -pedantic
+CXXFLAGS = -O2 -Wall -Wextra -pedantic
 LDFLAGS = -pthread
 
 LIST = main data eval gp agent fraction func init \
@@ -14,7 +14,7 @@ bin/%.o : %.cpp
 	$(CXX) -c $< $(CXXFLAGS) -o $@
 
 main: $(OBJ) 
-	$(CXX) $^ $(CXXFLAGS) $(LDFLAGS) -o bin/main
+	$(CXX) $^ $(LDFLAGS) -o bin/main
 
 clean:
 	rm -f bin/*
