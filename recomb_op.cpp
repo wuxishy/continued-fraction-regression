@@ -18,80 +18,65 @@ static inline double move_val(randint& rand, double a, double b) {
     return a + rand(-1, 4) * (b - a) / 3;
 }
 
-void population::variable_intersect(agent* a, agent* b) {
+template <typename Operator>
+void population::variable_recomb(agent* a, agent* b, Operator op) {
     fraction& p1 = a->member[0];
     fraction& p2 = b->member[1];
     fraction& ch = a->member[1];
 
-    int ind = rint(1, std::min(p1.depth, std::min(ch.depth, p2.depth))) - 1;
+    for (int i = 0; i < test_data.num_var; ++i)
+        ch.feature[i] = op(p1.feature[i], p2.feature[i]);
+
+    int max_dep = std::min(ch.depth, std::min(p1.depth, p2.depth));
     
-    vector<double>& acoeff = p1.repr[ind].coeff;
-    vector<bool>& afeature = p1.repr[ind].feature;
-    vector<double>& bcoeff = p2.repr[ind].coeff;
-    vector<bool>& bfeature = p2.repr[ind].feature;
-    
-    // find the shared varaiables
-    vector<double> new_coeff(test_data.num_var);
-    for(int i = 0; i < test_data.num_var; ++i) {
-        if (afeature[i] && bfeature[i]) {
-            // six equally spaced points around the parents
-            new_coeff[i] = move_val(rint, acoeff[i], bcoeff[i]);
+    for(int i = 0; i < max_dep; ++i) {
+        vector<double>& acoeff = p1.repr[i].coeff;
+        vector<bool>& afeature = p1.repr[i].feature;
+        vector<double>& bcoeff = p2.repr[i].coeff;
+        vector<bool>& bfeature = p2.repr[i].feature;
+        
+        // find the shared varaiables
+        vector<double> new_coeff(test_data.num_var);
+        for(int j = 0; j < test_data.num_var; ++j) {
+            if (!ch.feature[j]) {
+                new_coeff[j] = 0;
+                continue;
+            }
+
+            if (afeature[j] && bfeature[j]) {
+                // six equally spaced points around the parents
+                new_coeff[j] = move_val(rint, acoeff[j], bcoeff[j]);
+            }
+            else if (afeature[j])
+                new_coeff[j] = acoeff[j];
+            else if (bfeature[j])
+                new_coeff[j] = bcoeff[j];
         }
+
+        ch.repr[i].coeff = new_coeff;
+        ch.repr[i].find_feature();
+
+        ch.const_feature[i] = op(p1.const_feature[i], p2.const_feature[i]);
     }
 
-    ch.repr[ind].coeff = new_coeff;
-    ch.repr[ind].find_feature();
+    for(int i = max_dep; i < ch.depth; ++i) {
+        for(int j = 0; j < test_data.num_var; ++j) {
+            if (!ch.feature[j]) {
+                ch.repr[i].coeff[j] = 0;
+                ch.repr[i].feature[j] = false;
+            }
+        }
+    }
+}
 
-    ch.const_feature[ind] = p1.const_feature[ind] & p2.const_feature[ind];
+void population::variable_intersect(agent* a, agent* b) {
+    variable_recomb(a, b, std::bit_and<bool>());
 }
 
 void population::variable_union(agent* a, agent* b) {
-    fraction& p1 = a->member[0];
-    fraction& p2 = b->member[1];
-    fraction& ch = a->member[1];
-
-    int ind = rint(1, std::min(p1.depth, std::min(ch.depth, p2.depth))) - 1;
-    
-    vector<double>& acoeff = p1.repr[ind].coeff;
-    vector<bool>& afeature = p1.repr[ind].feature;
-    vector<double>& bcoeff = p2.repr[ind].coeff;
-    vector<bool>& bfeature = p2.repr[ind].feature;
-    
-    // find the shared varaiables
-    vector<double> new_coeff(test_data.num_var);
-    for(int i = 0; i < test_data.num_var; ++i) {
-        if (afeature[i] && bfeature[i]) {
-            // six equally spaced points around the parents
-            new_coeff[i] = move_val(rint, acoeff[i], bcoeff[i]);
-        }
-        else if (afeature[i])
-            new_coeff[i] = acoeff[i];
-        else if (bfeature[i])
-            new_coeff[i] = bcoeff[i];
-    }
-
-    ch.repr[ind].coeff = new_coeff;
-    ch.repr[ind].find_feature();
-
-    ch.const_feature[ind] = p1.const_feature[ind] | p2.const_feature[ind];
+    variable_recomb(a, b, std::bit_or<bool>());
 }
-/* bad operator
-void population::exchange_branch(agent* a, agent* b) {
-    int ind = rint(1, std::min(a->member[0].repr.size(), 
-                b->member[1].repr.size())) - 1;
 
-    // make a cut
-    a->member[1].constant = a->member[0].constant;
-    a->member[1].constant.resize(ind);
-    a->member[1].repr = a->member[0].repr;
-    a->member[1].repr.resize(ind);
-
-    // copy the branch from b to a;
-    for(size_t i = ind; i < b->member[1].repr.size(); ++i) {
-        a->member[1].constant.push_back(b->member[1].constant[i]);
-        a->member[1].repr.push_back(b->member[1].repr[i]);
-    }
-    
-    a->member[1].depth = b->member[1].depth;
+void population::variable_symdiff(agent* a, agent* b) {
+    variable_recomb(a, b, std::bit_xor<bool>());
 }
-*/

@@ -41,9 +41,12 @@ private:
     void simplify(agent* a);
 
     // recomb_op.cpp
+    // master helper class
+    template <typename Operator>
+    void variable_recomb(agent* a, agent* b, Operator op);
     void variable_intersect(agent* a, agent* b);
     void variable_union(agent* a, agent* b);
-    void exchange_branch(agent* a, agent* b);
+    void variable_symdiff(agent* a, agent* b);
 
     // mutate_op.cpp
     void feature_toggle(fraction& frac);
