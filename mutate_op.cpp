@@ -17,11 +17,8 @@ using std::size_t;
 void population::feature_toggle(fraction& frac) {
     int i = rint(0, frac.num_var - 1);
     
-    bool on = false;
-    for(func& f : frac.repr) on |= f.feature[i];
-    
     for(func& f : frac.repr) {
-        if (on) {
+        if (frac.feature[i]) {
  	    f.coeff[i] = 0;
 	    f.feature[i] = false;
 	}
@@ -30,24 +27,35 @@ void population::feature_toggle(fraction& frac) {
 	    f.feature[i] = true;
 	}
     }
+
+    frac.feature[i] = !frac.feature[i];
 }
 
-// randomly turn on all variables from an existing feature
-void population::expand_feature(fraction& frac) {
+// randomly turn on/off a variable from an existing feature
+void population::feature_mod(fraction& frac) {
     vector<int> arr;
     for(size_t i = 0; i < frac.num_var; ++i) {
-        bool on = false;
-        for (func& f : frac.repr) on |= f.feature[i];
-
-        if (on) arr.push_back(i);
+        if (frac.feature[i]) arr.push_back(i);
     }
     
-    if (arr.empty()) return;
-    int ind = arr[rint(0, arr.size()-1)];
+    int i = rint(0, arr.size());
+    int j;
 
-    for(func& f : frac.repr)
-        if (!f.feature[ind]) {
-            f.coeff[ind] = (rint(0, 1) ? 1 : -1) * rint(1, 3);
-            f.feature[ind] = true;
-        }
+    // constant feature
+    if (i == arr.size()) {
+        j = rint(1, frac.depth-1);
+
+        frac.const_feature[j] = !frac.const_feature[j];
+    }
+    // variable feature
+    else {
+        i = arr[i];
+        j = rint(0, frac.depth-1);
+        func& f = frac.repr[j];
+
+        if (f.feature[i]) f.coeff[i] = 0;
+        else f.coeff[i] = (rint(0, 1) ? 1 : -1) * rint(1, 3);
+
+        f.feature[i] = !f.feature[i];
+    }
 }

@@ -24,13 +24,15 @@ void population::eval_fit(agent* a, int i) {
 }
 
 void population::recombine(agent* a, agent* b) {
-    switch(rint(1, 2)) {
+    switch(rint(1, 3)) {
         case 1:
             variable_intersect(a, b);
             break;
         case 2:
             variable_union(a, b);
             break;
+        case 3:
+            variable_symdiff(a, b);
         default:
             break;
     }
@@ -42,7 +44,7 @@ void population::recombine(agent* a, agent* b) {
 }
 
 void population::mutate(agent* a) {
-    if(rint(1, 2) == 1) {
+    if(rint(1, 4) == 1) {
         // a rather major mutation
         // only mutate if current is too close or much worse
         // that pocket
@@ -50,7 +52,7 @@ void population::mutate(agent* a) {
                 a->fitness[1] > 2 * a->fitness[0])
             feature_toggle(a->member[1]);
         // or we perturb only slightly
-        else expand_feature(a->member[1]);
+        else feature_mod(a->member[1]);
     }
 
     eval_fit(a, 1);

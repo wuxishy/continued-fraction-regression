@@ -50,7 +50,7 @@ private:
 
     // mutate_op.cpp
     void feature_toggle(fraction& frac);
-    void expand_feature(fraction& frac);
+    void feature_mod(fraction& frac);
 
     // gp.cpp
     void breed(agent* leader);

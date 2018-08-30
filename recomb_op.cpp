@@ -27,9 +27,9 @@ void population::variable_recomb(agent* a, agent* b, Operator op) {
     for (int i = 0; i < test_data.num_var; ++i)
         ch.feature[i] = op(p1.feature[i], p2.feature[i]);
 
-    int max_dep = std::min(ch.depth, std::min(p1.depth, p2.depth));
+    size_t max_dep = std::min(ch.depth, std::min(p1.depth, p2.depth));
     
-    for(int i = 0; i < max_dep; ++i) {
+    for(size_t i = 0; i < max_dep; ++i) {
         vector<double>& acoeff = p1.repr[i].coeff;
         vector<bool>& afeature = p1.repr[i].feature;
         vector<double>& bcoeff = p2.repr[i].coeff;
@@ -59,7 +59,7 @@ void population::variable_recomb(agent* a, agent* b, Operator op) {
         ch.const_feature[i] = op(p1.const_feature[i], p2.const_feature[i]);
     }
 
-    for(int i = max_dep; i < ch.depth; ++i) {
+    for(size_t i = max_dep; i < ch.depth; ++i) {
         for(int j = 0; j < test_data.num_var; ++j) {
             if (!ch.feature[j]) {
                 ch.repr[i].coeff[j] = 0;
