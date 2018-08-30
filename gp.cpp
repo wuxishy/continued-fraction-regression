@@ -66,14 +66,14 @@ void population::run(int n) {
     fraction sol = root->member[0];
     double cur_best = root->fitness[0];
 
+    simplify(root);
+    
     int counter = 0;
     for(int i = 1; i <= n; ++i) {
         if (stop_condition()) break;
 
         breed(root);
         
-//        if (i % 20 == 0)
-//            simplify(root);
 
         if (i % 30 == 0) {
 //            diversify(root);
@@ -105,6 +105,7 @@ void population::run(int n) {
                 assert(false);
             }
             
+	    std::cout << i << '\n';
             print();
         }
 
@@ -115,8 +116,10 @@ void population::run(int n) {
         }
     }
     
+    std::cout << sol.num_feature() << ' ';
     std::cout.precision(5);
     std::cout << test_data.eval_fit(sol) << "\n";
+
     std::cout.precision(2);
     sol.show_latex(std::cout);
     std::cout << std::endl;
@@ -148,16 +151,17 @@ bool population::check(agent* a) {
 
 // for debug only
 void population::print() {
+    std::cout << root->member[0].num_feature() << '\n';
     std::cout.precision(5);
     std::cout << root->fitness[0] << ' ';
     std::cout.precision(2);
-    root->member[0].show(std::cout);
-    std::cout << std::endl;
+    //root->member[0].show(std::cout);
+    //std::cout << std::endl;
     
     std::cout.precision(5);
     std::cout << root->fitness[1] << ' ';
     std::cout.precision(2);
-    root->member[1].show(std::cout);
+    //root->member[1].show(std::cout);
     std::cout << std::endl;
     /*
     std::cout.precision(5);
