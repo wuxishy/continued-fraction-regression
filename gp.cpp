@@ -111,6 +111,7 @@ void population::run(int n) {
                 assert(false);
             }
             
+	    std::cout << i << ' ';
             print();
         }
 
@@ -126,11 +127,11 @@ void population::run(int n) {
     std::cout.precision(5);
     std::cout << e.eval_fit(sol) << "\n";
     std::cout << sol.num_feature() << ' ' << best << "\n";
-    std::cout.precision(3);
-    sol.show_latex(std::cout);
-    std::cout << std::endl;
-    sol.show_math(std::cout);
-    std::cout << std::endl;
+    std::cerr.precision(3);
+    sol.show_latex(std::cerr);
+    std::cerr << std::endl;
+    sol.show_math(std::cerr);
+    std::cerr << std::endl;
 
     e.print_val("data.out.csv", sol);
 }
@@ -158,7 +159,9 @@ bool population::check(agent* a) {
 // for debug only
 void population::print() {
     std::cout.precision(5);
-    std::cout << root->fitness[0] << ' ';
+    std::cout << root->member[0].num_feature() << ' ';
+    std::cout << root->fitness[0] << '\n';
+    /*
     std::cout.precision(2);
     root->member[0].show(std::cout);
     std::cout << std::endl;
@@ -168,6 +171,7 @@ void population::print() {
     std::cout.precision(2);
     root->member[1].show(std::cout);
     std::cout << std::endl;
+    */
     /*
     std::cout.precision(5);
     std::cout << root->children[2]->fitness[1] << ' ';

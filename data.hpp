@@ -18,11 +18,16 @@
 using std::vector;
 using std::size_t;
 
+#include <unordered_map>
+
 struct data_store {
     int num_entry;
     int num_var;
     vector<double> expected;
     vector<vector<double>> input;
+
+    std::unordered_map<int, int> count;
+    void make_count();
 
     void read(const char* filename);
 };

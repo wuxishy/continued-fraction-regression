@@ -19,6 +19,8 @@ int main(int argv, char** argc) {
     data_store test_data;
 
     test_data.read("data.in");
+    test_data.make_count();
+
     population ant(test_data);
 
     if (argv == 1) ant.run(200);

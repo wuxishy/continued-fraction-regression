@@ -12,6 +12,7 @@
 
 #include <fstream>
 
+#include <map>
 #include <cmath>
 
 #include <cassert>
@@ -36,7 +37,9 @@ evaluator::evaluator(const data_store& td, int num) : test_data(td) {
 
 static inline double eval_pt(const data_store& td, fraction& frac, int i) {
     auto sqr = [] (double x) -> double { return x*x; };
-    return sqr(td.expected[i] - frac.eval(td.input[i])) / td.num_entry;
+    double ret = sqr(td.expected[i] - frac.eval(td.input[i]));
+    int c = td.count.at(std::lround(td.expected[i]));
+    return ret / c / td.count.size();
 }
 
 static inline double process(double val) {
@@ -47,11 +50,11 @@ double evaluator::eval_fit(fraction& frac) const {
     if (selection.empty()) return eval_fit_full(frac);
     
     double ret = 0;
-    
+
     for(int i : selection) {
         ret += eval_pt(test_data, frac, i);
     }
-   
+
     return process(ret);
 }
 
@@ -61,14 +64,14 @@ double evaluator::eval_fit_full(fraction& frac) const {
     for(int i = 0; i < test_data.num_entry; ++i) {
         ret += eval_pt(test_data, frac, i);
     }
-   
+
     return process(ret);
 }
 
 double evaluator::adjust_fit(fraction& frac, double fit) const {
     if (!std::isfinite(fit)) return INFINITY;
 
-    double factor = std::max(1.0, 1 + (frac.num_feature()-3) * 0.5);
+    double factor = 1;// + frac.num_feature() * 0.01;
 
     return factor * fit;
 }

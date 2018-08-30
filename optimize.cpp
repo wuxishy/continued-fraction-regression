@@ -58,7 +58,7 @@ double optimize::run (int type) {
             if (--counter < 0) return;
 
             fraction buf = frac;
-            evaluator e(test_data, 200);
+            evaluator e(test_data, 60);
 
             nelder_mead(buf, e);
 
@@ -130,7 +130,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
     std::multimap<double, coord, std::greater<double>> simplex;
 
     // http://www.scholarpedia.org/article/Nelder-Mead_algorithm#Initial_simplex
-    double step = 0.5;
+    double step = 2.5;
     coord tmp(ndim);
     tmp[0] = frac.constant;
     for(int i = 1; i < ndim; ++i) {
@@ -178,7 +178,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
         double vw_fit = simplex.begin()->first;
         coord& vsw = (++simplex.begin())->second;
         double vsw_fit = (++simplex.begin())->first;
-        coord& vb = (--simplex.end())->second;
+        coord& vb = simplex.rbegin()->second;
 
         coord vr = refl(cent, vw);
         double vr_fit = eval_fit(vr, buf, e);
@@ -239,7 +239,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
     //std::cerr << iter << '\n';
     //if (iter >= 3000) std::cerr << "RICH!!!\n";
 
-    double ret = eval_fit((--simplex.end())->second, buf, e);
+    double ret = simplex.rbegin()->first;
     // now buf contains the best
     //for(func& f : frac.repr) f.find_feature();
       
@@ -249,6 +249,5 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
         std::cout << (--simplex.end())->second[i] << ' ';
     std::cout << '\n';
     */
-    
     return e.adjust_fit(buf, ret);
 }
