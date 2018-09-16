@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -O2 -Wall -Wextra -pedantic
-LDFLAGS = -pthread
+CXXFLAGS = -O2 -fopenmp -Wall -Wextra -pedantic
+LDFLAGS = -fopenmp
 
 LIST = main data eval gp agent fraction func init \
        evolve recomb_op mutate_op optimize

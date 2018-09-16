@@ -11,11 +11,12 @@ class data_store;
 class fraction;
 
 #include <unordered_set>
+#include <vector>
 
 class evaluator {
 private:
     const data_store& test_data;
-    std::unordered_set<int> selection;
+    std::vector<int> selection;
 
 public:
     evaluator(const data_store& td);

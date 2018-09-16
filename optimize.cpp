@@ -14,11 +14,11 @@
 #include <map>
 
 #include <cmath>
-
+/*
 #include <thread>
 #include <atomic>
 #include <mutex>
-
+*/
 #include <iostream>
 
 optimize::optimize(data_store& td, fraction& f) : 
@@ -42,6 +42,7 @@ optimize::optimize(data_store& td, fraction& f) :
 }
 
 double optimize::run (int type) {
+    /*
     int num_thread = std::thread::hardware_concurrency();
     vector<std::thread> thread_pool;
 
@@ -49,34 +50,37 @@ double optimize::run (int type) {
 
     int c = std::max(8, num_thread);
     std::atomic<int> counter(c);
-
+    */
+    int counter = 8;
     // assume that objective function is always nonnegative
     double best = -1;
     
     auto run_thread = [&, this] () {
-        while (true) {
-            if (--counter < 0) return;
+        //while (true) {
+            //if (--counter < 0) return;
 
             fraction buf = frac;
-            evaluator e(test_data, 60);
+            evaluator e(test_data, 100);
 
             nelder_mead(buf, e);
 
             double tmp = e.adjust_fit(buf, e.eval_fit_full(buf));
-            frac_mutex.lock();
+            //frac_mutex.lock();
             if (best < 0 || tmp < best) {
                 best = tmp;
                 frac = buf;
             }
-            frac_mutex.unlock();
-        }
+            //frac_mutex.unlock();
+        //}
     };
     
+    for(int i = 0; i < counter; ++i) run_thread();
+    /*
     for (int i = 0; i < num_thread; ++i)
         thread_pool.push_back(std::thread(run_thread));
     for (int i = 0; i < num_thread; ++i)
         thread_pool[i].join();
-
+    */
     return best;
 }
 

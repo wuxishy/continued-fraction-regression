@@ -59,13 +59,8 @@ double fraction::eval(const vector<double>& vars, size_t n) {
 }
 
 int fraction::num_feature() {
-    std::vector<bool> occur(num_var, false);
-    for (func& f : repr)
-        for(std::size_t i = 0; i < num_var; ++i)
-            occur[i] = occur[i] | f.feature[i];
-
     int ret = 0;
-    for(bool x : occur) ret += x;
+    for(bool x : feature) ret += x;
 
     return ret;
 }
