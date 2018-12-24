@@ -10,8 +10,8 @@
 #include "agent.hpp"
 
 void population::initialize(agent *current) {
-    current->member[0] = fraction(test_data.num_var);
-    current->member[1] = fraction(test_data.num_var);
+    current->member[0] = fraction(num_var);
+    current->member[1] = fraction(num_var);
 
     eval_fit(current, 0);
     eval_fit(current, 1);

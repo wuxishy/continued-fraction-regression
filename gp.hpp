@@ -17,13 +17,16 @@ class fraction;
 #include <vector>
 #include "rng.hpp"
 #include "data.hpp"
+#include "eval.hpp"
 
 // used to catch Control-C and gracefully stop
 extern volatile bool STOP;
 
 class population {
 private:
-    data_store test_data;
+    int num_var;
+    const data_store train_data, test_data;
+    evaluator train_e, test_e;
 
     agent* root;
 
@@ -62,7 +65,7 @@ private:
     void print_tree();
 
 public:
-    population(data_store td);
+    population(data_store train, data_store test);
     ~population();
 
     void run(int gen);

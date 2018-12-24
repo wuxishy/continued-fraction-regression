@@ -14,22 +14,20 @@
 
 #include <cmath>
 
-#include <cassert>
-
-evaluator::evaluator(const data_store& td) : test_data(td) {
+evaluator::evaluator(const data_store& td) : data(td) {
     selection = std::unordered_set<int>();
 }
 
-evaluator::evaluator(const data_store& td, int num) : test_data(td) {
+evaluator::evaluator(const data_store& td, int num) : data(td) {
     selection = std::unordered_set<int>();
    
     // if too many being selected, might just as choose the whole
-    if (num *2 >= test_data.num_entry) return;
+    if (num *2 >= data.num_entry) return;
 
     randint rint;
     int iter = 0; // guard against super bad RNG
-    while (num > 0 && iter++ < test_data.num_entry) {
-        auto result = selection.insert(rint(0, test_data.num_entry-1));
+    while (num > 0 && iter++ < data.num_entry) {
+        auto result = selection.insert(rint(0, data.num_entry-1));
         if (result.second) --num;
     }
 }
@@ -49,7 +47,7 @@ double evaluator::eval_fit(fraction& frac) const {
     double ret = 0;
     
     for(int i : selection) {
-        ret += eval_pt(test_data, frac, i);
+        ret += eval_pt(data, frac, i);
     }
    
     return process(ret);
@@ -58,8 +56,8 @@ double evaluator::eval_fit(fraction& frac) const {
 double evaluator::eval_fit_full(fraction& frac) const { 
     double ret = 0;
 
-    for(int i = 0; i < test_data.num_entry; ++i) {
-        ret += eval_pt(test_data, frac, i);
+    for(int i = 0; i < data.num_entry; ++i) {
+        ret += eval_pt(data, frac, i);
     }
    
     return process(ret);
@@ -76,9 +74,9 @@ double evaluator::adjust_fit(fraction& frac, double fit) const {
 void evaluator::print_val(const char* filename, fraction& frac) const {
     std::ofstream fout(filename);
     
-    for(int i = 0; i < test_data.num_entry; ++i) {
-        fout << test_data.expected[i] << ',';
-        fout << frac.eval(test_data.input[i]) << '\n';
+    for(int i = 0; i < data.num_entry; ++i) {
+        fout << data.expected[i] << ',';
+        fout << frac.eval(data.input[i]) << '\n';
     }
 
     fout.close();

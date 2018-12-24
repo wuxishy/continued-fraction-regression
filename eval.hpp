@@ -14,7 +14,7 @@ class fraction;
 
 class evaluator {
 private:
-    const data_store& test_data;
+    const data_store& data;
     std::unordered_set<int> selection;
 
 public:

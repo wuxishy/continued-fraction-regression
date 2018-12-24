@@ -24,7 +24,7 @@ void population::variable_recomb(agent* a, agent* b, Operator op) {
     fraction& p2 = b->member[1];
     fraction& ch = a->member[1];
 
-    for (int i = 0; i < test_data.num_var; ++i)
+    for (int i = 0; i < num_var; ++i)
         ch.feature[i] = op(p1.feature[i], p2.feature[i]);
 
     size_t max_dep = std::min(ch.depth, std::min(p1.depth, p2.depth));
@@ -36,8 +36,8 @@ void population::variable_recomb(agent* a, agent* b, Operator op) {
         vector<bool>& bfeature = p2.repr[i].feature;
         
         // find the shared varaiables
-        vector<double> new_coeff(test_data.num_var+1);
-        for(int j = 0; j < test_data.num_var; ++j) {
+        vector<double> new_coeff(num_var+1);
+        for(int j = 0; j < num_var; ++j) {
             if (!ch.feature[j]) {
                 new_coeff[j] = 0;
                 continue;
@@ -60,7 +60,7 @@ void population::variable_recomb(agent* a, agent* b, Operator op) {
     }
 
     for(size_t i = 2*max_dep+1; i < ch.repr.size(); ++i) {
-        for(int j = 0; j < test_data.num_var; ++j) {
+        for(int j = 0; j < num_var; ++j) {
             if (!ch.feature[j]) {
                 ch.repr[i].coeff[j] = 0;
                 ch.repr[i].feature[j] = false;

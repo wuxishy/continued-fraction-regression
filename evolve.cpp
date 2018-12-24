@@ -19,8 +19,8 @@
 #include <iostream> 
 
 void population::eval_fit(agent* a, int i) {
-    evaluator e(test_data);
-    a->fitness[i] = e.adjust_fit(a->member[i], e.eval_fit(a->member[i]));
+    a->fitness[i] = train_e.adjust_fit(a->member[i], 
+            train_e.eval_fit(a->member[i]));
 }
 
 void population::recombine(agent* a, agent* b) {
@@ -67,11 +67,11 @@ void population::local_search(agent* a) {
             local_search(a->children[i]);
     }
     
-    optimize opt(test_data, a->member[1]);
+    optimize opt(train_data, a->member[1]);
     a->fitness[1] = opt.run();
 
     if (a->fitness[0] > a->fitness[1]) {
-        optimize more_opt(test_data, a->member[0]);
+        optimize more_opt(train_data, a->member[0]);
         a->fitness[0] = more_opt.run();
     }
 
@@ -90,7 +90,7 @@ void population::diversify(agent* a) {
                 // also add a coin toss
                 rint(1, 2) == 1) {
 
-            a->member[0] = fraction(test_data.num_var);
+            a->member[0] = fraction(num_var);
             eval_fit(a, 0);
         }
     }
@@ -106,10 +106,10 @@ void population::simplify(agent* a) {
     fraction& frac = a->member[1];
     
     int total = 0;
-    vector<int> occur(test_data.num_var, 0);
+    vector<int> occur(num_var, 0);
     
     for(func& f : frac.repr)
-        for(int i = 0; i < test_data.num_var; ++i) {
+        for(int i = 0; i < num_var; ++i) {
             occur[i] += f.feature[i];
             total += f.feature[i];
         }
@@ -117,13 +117,13 @@ void population::simplify(agent* a) {
     int num_feature = 0;
     for(int x : occur) num_feature += (x > 0);
     // do not touch if number of features is already small
-    if (num_feature <= 2 || num_feature <= 0.1 * test_data.num_var)
+    if (num_feature <= 2 || num_feature <= 0.1 * num_var)
         return;
 
     // randomly kill off less common feature
-    for(int i = 0; i < test_data.num_var; ++i) {
+    for(int i = 0; i < num_var; ++i) {
         // do not touch those common ones
-        if (occur[i] * test_data.num_var >= 2 * total) continue;
+        if (occur[i] * num_var >= 2 * total) continue;
 
         // less common -> more likely to die
         if (rint(1, total) > occur[i]) {

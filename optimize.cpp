@@ -22,8 +22,8 @@
 #include <iostream>
 #include <cassert>
 
-optimize::optimize(data_store& td, fraction& f) : 
-        test_data(td), frac(f) {
+optimize::optimize(const data_store& td, fraction& f) :
+        train_data(td), frac(f) {
     ndim = 0;
 
     for(size_t i = 0; i < frac.repr.size(); ++i) {
@@ -53,7 +53,7 @@ double optimize::run () {
             if (--counter < 0) return;
 
             fraction buf = frac;
-            evaluator e(test_data, 200);
+            evaluator e(train_data, 200);
 
             nelder_mead(buf, e);
 

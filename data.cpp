@@ -13,6 +13,8 @@
 
 void data_store::read(const char* filename) {
     std::ifstream fin(filename);
+
+    if (!fin.is_open()) return;
    
     fin >> num_entry >> num_var;
 

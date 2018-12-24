@@ -12,13 +12,16 @@
 #include "agent.hpp"
 #include "optimize.hpp"
 
-#include "eval.hpp"
-
 #include <cassert>
 #include <iostream>
 #include <deque>
 
-population::population(data_store td) : test_data(td) {
+population::population(data_store train, data_store test) :
+        train_data(train), test_data(test),
+        train_e(train_data), test_e(test_data) {
+
+    num_var = train_data.num_var;
+
     root = new agent(3);
 
     rint = randint();
@@ -32,7 +35,7 @@ population::~population() {
 
 // recombination
 void population::breed(agent* leader) {
-    mutate(leader);
+    //mutate(leader);
 
     // reached a leaf
     if (leader->depth <= 1) return;
@@ -97,7 +100,7 @@ void population::run(int n) {
 
             // kill if the best solution got stuck
             if (counter > 5) {
-                root->member[0] = fraction(test_data.num_var);
+                root->member[0] = fraction(num_var);
                 eval_fit(root, 0);
 
                 root->movedown_pocket();
@@ -121,10 +124,9 @@ void population::run(int n) {
         }
     }
     
-    evaluator e(test_data);
     
     std::cout.precision(5);
-    std::cout << e.eval_fit(sol) << "\n";
+    std::cout << train_e.eval_fit(sol) << "\n";
     std::cout << sol.num_feature() << ' ' << best << "\n";
     std::cout.precision(3);
     sol.show_latex(std::cout);
@@ -132,7 +134,7 @@ void population::run(int n) {
     sol.show_math(std::cout);
     std::cout << std::endl;
 
-    e.print_val("data.out.csv", sol);
+    train_e.print_val("data.out.csv", sol);
 }
 
 bool population::check(agent* a) {

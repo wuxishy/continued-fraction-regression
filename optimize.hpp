@@ -19,7 +19,7 @@ using std::size_t;
 
 class optimize {
 private:
-    const data_store& test_data;
+    const data_store& train_data;
 
     fraction& frac;
 
@@ -32,7 +32,7 @@ private:
     double nelder_mead (fraction& frac, const evaluator& e) const;
 
 public:
-    optimize(data_store& td, fraction& f);
+    optimize(const data_store& td, fraction& f);
 
     double run ();
 };

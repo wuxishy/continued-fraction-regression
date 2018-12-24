@@ -18,10 +18,12 @@ void mark_stop(int signum) {
 int main(int argv, char** argc) {
     signal(SIGINT, mark_stop);
     
-    data_store test_data;
+    data_store test_data, train_data;
 
-    test_data.read("data.in");
-    population ant(test_data);
+    train_data.read("data.in");
+    test_data.read("test.in");
+
+    population ant(train_data, test_data);
 
     auto start = std::chrono::system_clock::now();
 
