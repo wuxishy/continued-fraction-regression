@@ -8,6 +8,8 @@
 #include <string>
 #include <iostream>
 
+#include <chrono>
+
 volatile bool STOP = false;
 void mark_stop(int signum) {
     STOP = true;
@@ -21,8 +23,18 @@ int main(int argv, char** argc) {
     test_data.read("data.in");
     population ant(test_data);
 
+    auto start = std::chrono::system_clock::now();
+
     if (argv == 1) ant.run(200);
     else ant.run(std::stoi(argc[1]));
-  
+
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff = end-start;
+
+    std::cout.precision(3);
+    std::cout << "======================\n";
+    std::cout << "Time in seconds: " << diff.count() << "\n";
+    std::cout << "Time in minutes: " << diff.count() / 60 << "\n";
+
     return 0;
 }
