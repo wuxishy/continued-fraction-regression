@@ -19,7 +19,7 @@
 #include <deque>
 
 population::population(data_store td) : test_data(td) {
-    root = new agent(4);
+    root = new agent(3);
 
     rint = randint();
 

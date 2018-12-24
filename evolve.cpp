@@ -68,11 +68,11 @@ void population::local_search(agent* a) {
     }
     
     optimize opt(test_data, a->member[1]);
-    a->fitness[1] = opt.run(1);
+    a->fitness[1] = opt.run();
 
     if (a->fitness[0] > a->fitness[1]) {
         optimize more_opt(test_data, a->member[0]);
-        a->fitness[0] = more_opt.run(1);
+        a->fitness[0] = more_opt.run();
     }
 
     a->movedown_pocket();

@@ -34,6 +34,6 @@ private:
 public:
     optimize(data_store& td, fraction& f);
 
-    double run (int type);
+    double run ();
 };
 #endif // __OPTIMIZE_HPP__

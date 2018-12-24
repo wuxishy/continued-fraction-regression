@@ -37,25 +37,18 @@ void population::feature_mod(fraction& frac) {
     for(size_t i = 0; i < frac.num_var; ++i) {
         if (frac.feature[i]) arr.push_back(i);
     }
-    
-    int i = rint(0, arr.size());
+
+    if (arr.empty()) return;
+
+    int i = rint(0, arr.size()-1);
     int j;
 
-    // constant feature
-    if (i == arr.size()) {
-        j = rint(1, frac.depth-1);
+    i = arr[i];
+    j = rint(0, frac.repr.size()-1);
+    func& f = frac.repr[j];
 
-        frac.const_feature[j] = !frac.const_feature[j];
-    }
-    // variable feature
-    else {
-        i = arr[i];
-        j = rint(0, frac.depth-1);
-        func& f = frac.repr[j];
+    if (f.feature[i]) f.coeff[i] = 0;
+    else f.coeff[i] = (rint(0, 1) ? 1 : -1) * rint(1, 3);
 
-        if (f.feature[i]) f.coeff[i] = 0;
-        else f.coeff[i] = (rint(0, 1) ? 1 : -1) * rint(1, 3);
-
-        f.feature[i] = !f.feature[i];
-    }
+    f.feature[i] = !f.feature[i];
 }

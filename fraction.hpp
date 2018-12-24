@@ -24,10 +24,7 @@ private:
     size_t num_var;
 
 public:
-    double constant;
-
     size_t depth;
-    vector<bool> const_feature;
     vector<bool> feature;
     vector<func> repr;
     

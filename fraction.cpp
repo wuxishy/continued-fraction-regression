@@ -16,20 +16,15 @@
 fraction::fraction(size_t n) : num_var(n) {
     randint rint;
 
-    depth = 5;
-
-    constant = 0;
-    const_feature = vector<bool>(depth);
+    depth = 3;
 
     feature = vector<bool>(num_var);
-    repr = vector<func>(depth);
+    repr = vector<func>(depth*2+1);
 
     for (size_t i = 0; i < num_var; ++i) 
-        feature[i] = (rint(0, 4) ? false : true);
+        feature[i] = (rint(0, 2) ? false : true);
 
-    for(size_t i = 0; i < depth; ++i) {
-        const_feature[i] = rint(0, 1);
-
+    for(size_t i = 0; i < depth*2+1; ++i) {
         repr[i] = func(num_var);
         for (size_t j = 0; j < num_var; ++j) {
             if (!feature[j]) continue;
@@ -38,24 +33,24 @@ fraction::fraction(size_t n) : num_var(n) {
             if (repr[i].coeff[j] != 0) 
                 repr[i].feature[j] = true; 
         }
-        repr[i].alt_constant = rint(-3, 3);
+        repr[i].coeff[num_var] = rint(-3, 3);
+        repr[i].feature[num_var] = true;
     }
 }
 
 double fraction::eval(const vector<double>& vars) {
-    return eval(vars, repr.size() - 1);
+    return eval(vars, depth);
 }
 
 double fraction::eval(const vector<double>& vars, size_t n) {
-    if (n >= repr.size()) 
-        n = repr.size() - 1;
+    if (n > depth) n = depth;
     
     // evaluating form below
-    double ret = repr[n].eval(vars);
+    double ret = repr[2*n].eval(vars);
     for(int i = n-1; i >= 0; --i)
-        ret = repr[i].eval(vars) / (const_feature[i+1] + ret);
+        ret = repr[i*2].eval(vars) + (repr[2*i+1].eval(vars) / ret);
 
-    return constant + ret;
+    return ret;
 }
 
 int fraction::num_feature() {
@@ -73,10 +68,13 @@ int fraction::num_feature() {
 void fraction::show(std::ostream& out) {
     out << "[";
 
-    for(size_t i = 0; i < depth; ++i) {
-        if (i > 0) out << "; ";
-        out << (i ? const_feature[i] : constant) << ", ";
-        repr[i].show(out);
+    for(size_t i = 0; i <= depth; ++i) {
+        repr[2*i].show(out);
+        if (i != depth) {
+            out << ", ";
+            repr[2*i+1].show(out);
+            out << "; ";
+        }
     }
 
     out << "]";
@@ -85,38 +83,32 @@ void fraction::show(std::ostream& out) {
 void fraction::show_latex(std::ostream& out) {
     out << '$';
     
-    for(size_t i = 0; i < depth; ++i) {
-        if (i == 0) out << constant << '+';
-        else if (const_feature[i]) out << "1+";
-
-        if (i == depth-1)
-            repr[i].show_latex(out);
-        else {
-            out << "\\cfrac{";
-            repr[i].show_latex(out);
-            out << "}{";
-        }
+    repr[0].show_latex(out);
+    out << '+';
+    for(size_t i = 1; i <= depth; ++i) {
+        out << "\\cfrac{";
+        repr[2*i-1].show_latex(out);
+        out << "}{";
+        repr[2*i].show_latex(out);
+        if (i != depth) out << '+';
     }
     
-    for(size_t i = 0; i < depth-1; ++i)
+    for(size_t i = 1; i <= depth; ++i)
         out << '}';
 
     out << '$';
 }
 
 void fraction::show_math(std::ostream& out) {
-    for(size_t i = 0; i < depth; ++i) {
-        if (i == 0) out << constant << '+';
-        else if (const_feature[i]) out << "1+";
-
-        if (i == depth-1)
-            repr[i].show_math(out);
-        else {
-            repr[i].show_math(out);
-            out << "/(";
-        }
+    repr[0].show_math(out);
+    out << '+';
+    for(size_t i = 1; i <= depth; ++i) {
+        repr[2*i-1].show_math(out);
+        out << "/(";
+        repr[2*i].show_math(out);
+        if (i != depth) out << '+';
     }
     
-    for(size_t i = 0; i < depth-1; ++i)
+    for(size_t i = 1; i <= depth; ++i)
         out << ')';
 }

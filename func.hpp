@@ -22,8 +22,6 @@ public:
     vector<bool> feature;
     vector<double> coeff;
 
-    double alt_constant = 0;
-
     void find_feature();
 
 //public:

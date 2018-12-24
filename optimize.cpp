@@ -20,28 +20,23 @@
 #include <mutex>
 
 #include <iostream>
+#include <cassert>
 
 optimize::optimize(data_store& td, fraction& f) : 
         test_data(td), frac(f) {
-    ndim = 1;
-    var_map.push_back({0, 0}); //for convenience
-    for(size_t i = 0; i < frac.depth; ++i) {
-        bool on = false;
+    ndim = 0;
+
+    for(size_t i = 0; i < frac.repr.size(); ++i) {
         for(size_t j = 0; j < frac.repr[i].coeff.size(); ++j) {
             if(frac.repr[i].feature[j]) {
                 ++ndim;
                 var_map.push_back({i, j});
-                on = true;
             }
-        }
-        if (!on) {
-            ++ndim;
-            var_map.push_back({i, -1});
         }
     }
 }
 
-double optimize::run (int type) {
+double optimize::run () {
     int num_thread = std::thread::hardware_concurrency();
     vector<std::thread> thread_pool;
 
@@ -82,13 +77,9 @@ double optimize::run (int type) {
 
 double optimize::eval_fit(const vector<double>& vec, fraction& buf, 
         const evaluator& e) const {
-    buf.constant = vec[0];
-    for(int i = 1; i < ndim; ++i) {
+    for(int i = 0; i < ndim; ++i) {
         const pii& pos = var_map[i];
-        if (pos.second >= 0)
-            buf.repr[pos.first].coeff[pos.second] = vec[i];
-        else
-            buf.repr[pos.first].alt_constant = vec[i];
+        buf.repr[pos.first].coeff[pos.second] = vec[i];
     }
     return e.eval_fit(buf);
 }
@@ -132,13 +123,9 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
     // http://www.scholarpedia.org/article/Nelder-Mead_algorithm#Initial_simplex
     double step = 0.5;
     coord tmp(ndim);
-    tmp[0] = frac.constant;
-    for(int i = 1; i < ndim; ++i) {
+    for(int i = 0; i < ndim; ++i) {
         const pii& pos = var_map[i];
-        if (pos.second >= 0)
-            tmp[i] = frac.repr[pos.first].coeff[pos.second];
-        else
-            tmp[i] = frac.repr[pos.first].alt_constant;
+        tmp[i] = frac.repr[pos.first].coeff[pos.second];
     }
     simplex.insert({eval_fit(tmp, buf, e), tmp});
 
@@ -176,7 +163,7 @@ double optimize::nelder_mead (fraction& buf, const evaluator& e) const {
         */
         coord& vw = simplex.begin()->second;
         double vw_fit = simplex.begin()->first;
-        coord& vsw = (++simplex.begin())->second;
+        //coord& vsw = (++simplex.begin())->second;
         double vsw_fit = (++simplex.begin())->first;
         coord& vb = (--simplex.end())->second;
 

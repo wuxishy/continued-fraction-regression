@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O2 -Wall -Wextra -pedantic
+CXXFLAGS = -g -O2 -Wall -Wextra -pedantic
 LDFLAGS = -pthread
 
 LIST = main data eval gp agent fraction func init \

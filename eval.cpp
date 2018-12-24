@@ -68,7 +68,7 @@ double evaluator::eval_fit_full(fraction& frac) const {
 double evaluator::adjust_fit(fraction& frac, double fit) const {
     if (!std::isfinite(fit)) return INFINITY;
 
-    double factor = std::max(1.0, 1 + (frac.num_feature()-3) * 0.5);
+    double factor = 1 + frac.num_feature() * 0.35;
 
     return factor * fit;
 }
