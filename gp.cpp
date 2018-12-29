@@ -35,7 +35,7 @@ population::~population() {
 
 // recombination
 void population::breed(agent* leader) {
-    //mutate(leader);
+    mutate(leader);
 
     // reached a leaf
     if (leader->depth <= 1) return;
@@ -113,8 +113,8 @@ void population::run(int n) {
 		print_tree();
                 assert(false);
             }
-            
-            print();
+            //std::cout << i << '\n'; 
+            //print();
         }
 
         cur_best = root->fitness[0];
@@ -126,7 +126,7 @@ void population::run(int n) {
     
     
     std::cout.precision(5);
-    std::cout << train_e.eval_fit(sol) << "\n";
+    std::cout << train_e.eval_fit(sol) << "\n" << test_e.eval_fit(sol) << "\n";
     std::cout << sol.num_feature() << ' ' << best << "\n";
     std::cout.precision(3);
     sol.show_latex(std::cout);
@@ -135,6 +135,7 @@ void population::run(int n) {
     std::cout << std::endl;
 
     train_e.print_val("data.out.csv", sol);
+    test_e.print_val("test.out.csv", sol);
 }
 
 bool population::check(agent* a) {
